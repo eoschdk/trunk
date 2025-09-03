@@ -1402,6 +1402,7 @@
 0xfc31f129,task_FORMAT_TASK_PROGRESS
 0xfc31f357,task_FORMAT_TASK_NAME
 0xfc324269,sddomChangeClockSpeed
+0xfc32507f,SD_HWInit
 0xfc325dcf,SD_GetTtlSect
 0xfc326497,SD_ChgClkSpd
 0xfc3264cb,SD_GetSpd
@@ -2247,4 +2248,11 @@
 0xfc436219,task_CtgTotalTask
 0xfc437cbd,SD_take_sem
 0xfc437cc9,SD_give_sem
+0xfc437e71,EnableSDClk
+0xfc437e97,j_DisableSDClk
 0xfc437f45,SetSDClkFrequency
+0xfc438497,EnableSDCONHClk
+0xfc4384b1,DisableSDCONHClk
+0xfc438677,SD_get_clk_reg
+0xfc438683,SD_set_clk_reg
+0xfc4386a7,DisableSDClk

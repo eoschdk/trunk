@@ -262,6 +262,8 @@
 0xfc541eef,DisableMacroIS_FW
 0xfc540a5f,DisableMechaCircuit_FW
 0xfc540b09,DisableResetGpio_FW
+0x010f3f61,DisableSDClk
+0x010f3cab,DisableSDCONHClk
 0xfc2a5605,DisableZoomActuatorSpeedLog_FW
 0xfc540aa3,DisableZoomEncoderCircuit_FW
 0xfc540ff3,DisableZoomLensElectricControl_FW
@@ -366,6 +368,8 @@
 0xfc541ee5,EnableMacroIS_FW
 0xfc540a55,EnableMechaCircuit_FW
 0xfc540af9,EnableResetGpio_FW
+0x010f378b,EnableSDClk
+0x010f3c91,EnableSDCONHClk
 0xfc2a55fb,EnableZoomActuatorSpeedLog_FW
 0xfc540a99,EnableZoomEncoderCircuit_FW
 0xfc540fe7,EnableZoomLensElectricControl_FW
@@ -1059,6 +1063,7 @@
 0xfc2c7da0,j_DeleteEventFlag
 0xfc2c7ae0,j_DeleteMessageQueue
 0xfc2c7cf0,j_DeleteSemaphore
+0x010f37b1,j_DisableSDClk
 0xfc2c7c68,j_dry_error_printf
 0xfc2c7d78,j_dry_memcpy
 0xfc2c7321,j_dry_memcpy_bytes
@@ -1761,10 +1766,13 @@
 0x010f193d,SD_cmd_setup_resp48b
 0x010f46f9,SD_debug_log
 0x010f4771,SD_error_log
+0x010f3f41,SD_get_clk_reg
 0x010f21b9,SD_get_speed_id
 0x010e792f,SD_GetSpd
 0x010e6de9,SD_GetTtlSect
 0x010eda8d,SD_give_sem
+0x010e5ef5,SD_HWInit
+0x010f3f4d,SD_set_clk_reg
 0x010eda81,SD_take_sem
 0x010e29f3,SDCardUHSActive_FW
 0x010f22cf,sdconWaitInterrupt

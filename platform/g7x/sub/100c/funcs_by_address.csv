@@ -70,6 +70,7 @@
 0x010e7b79,ReadSDCard
 0x010e7c63,WriteSDCard
 0x010ea65d,sddomChangeClockSpeed
+0x010eafd3,SD_HWInit
 0x010ebda5,SD_GetTtlSect
 0x010ec8d5,SD_ChgClkSpd
 0x010ec909,SD_GetSpd
@@ -85,7 +86,14 @@
 0x010f7777,j2_SetSR
 0x010f7905,j_mktime_ext
 0x010f7a20,j_dcache_flush_and_enable
+0x010f8533,EnableSDClk
+0x010f8559,j_DisableSDClk
 0x010f8607,SetSDClkFrequency
+0x010f8a39,EnableSDCONHClk
+0x010f8a53,DisableSDCONHClk
+0x010f8ce9,SD_get_clk_reg
+0x010f8cf5,SD_set_clk_reg
+0x010f8d09,DisableSDClk
 0x010f8fb9,SD_debug_log
 0x010f9031,SD_error_log
 0x01106910,dry_memcpy_bytes

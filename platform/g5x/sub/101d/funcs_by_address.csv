@@ -879,6 +879,7 @@
 0xfc234c5b,task_FmidTask
 0xfc237953,GraphicSystemCoreFinish
 0xfc23a8c5,sddomChangeClockSpeed
+0xfc23b16d,SD_HWInit
 0xfc23c071,SD_GetTtlSect
 0xfc23cb83,SD_ChgClkSpd
 0xfc23cbb7,SD_GetSpd
@@ -1604,7 +1605,14 @@
 0xfc4ea86f,get_nd_value
 0xfc4eadfd,GetZoomLensCurrentPosition
 0xfc504f47,task_Raw2Ss2YuvTask
+0xfc54057b,EnableSDClk
+0xfc5405a1,j_DisableSDClk
 0xfc54064f,SetSDClkFrequency
+0xfc540a81,EnableSDCONHClk
+0xfc540a9b,DisableSDCONHClk
+0xfc540d31,SD_get_clk_reg
+0xfc540d3d,SD_set_clk_reg
+0xfc540d51,DisableSDClk
 0xfc540f65,task_TricEncVTask
 0xfc5418c1,task_TricEncMsgTask
 0xfc5422b1,task_TricInitTask

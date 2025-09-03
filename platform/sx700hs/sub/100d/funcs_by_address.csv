@@ -1408,6 +1408,7 @@
 0xfc356b0d,task_FileManMarkAllTask
 0xfc356cb3,task_SetGeoTagExecution
 0xfc35ba8d,sddomChangeClockSpeed
+0xfc35c3f9,SD_HWInit
 0xfc35d1bd,SD_GetTtlSect
 0xfc35dced,SD_ChgClkSpd
 0xfc35dd21,SD_GetSpd
@@ -2254,7 +2255,14 @@
 0xfc45fc7b,CancelLoopGainCalc_FW
 0xfc45fc85,ReloadISAdjustment_FW
 0xfc45fc8f,MoveISLensToCentralPosition_FW
+0xfc465e2f,EnableSDClk
+0xfc465e55,j_DisableSDClk
 0xfc465f03,SetSDClkFrequency
+0xfc466335,EnableSDCONHClk
+0xfc46634f,DisableSDCONHClk
+0xfc4665e5,SD_get_clk_reg
+0xfc4665f1,SD_set_clk_reg
+0xfc466605,DisableSDClk
 0xfc4bc9d1,UIFS_PlayTrimExecuteAllImageSize_FW
 0xfc4bccc9,LCDMsg_Move_FW
 0xfc4bcd1d,LCDMsg_Delete_FW

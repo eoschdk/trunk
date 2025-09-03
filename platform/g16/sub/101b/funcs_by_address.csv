@@ -1518,6 +1518,7 @@
 0xfc37b529,task_FileManMarkAllTask
 0xfc37b6cf,task_SetGeoTagExecution
 0xfc37e57d,sddomChangeClockSpeed
+0xfc37eee1,SD_HWInit
 0xfc37fca1,SD_GetTtlSect
 0xfc3807d1,SD_ChgClkSpd
 0xfc380805,SD_GetSpd
@@ -2244,7 +2245,14 @@
 0xfc46f12b,CancelLoopGainCalc_FW
 0xfc46f135,ReloadISAdjustment_FW
 0xfc46f13f,MoveISLensToCentralPosition_FW
+0xfc472643,EnableSDClk
+0xfc472669,j_DisableSDClk
 0xfc472717,SetSDClkFrequency
+0xfc472b49,EnableSDCONHClk
+0xfc472b63,DisableSDCONHClk
+0xfc472d21,SD_get_clk_reg
+0xfc472d2d,SD_set_clk_reg
+0xfc472d41,DisableSDClk
 0xfc474b99,task_ImgPlyTask
 0xfc474ca5,task_ImgPlyLowTask
 0xfc4770d3,SetPMByGpio_FW
