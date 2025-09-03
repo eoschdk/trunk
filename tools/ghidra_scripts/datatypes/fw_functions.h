@@ -598,9 +598,17 @@ __stdcall int SD_GetSpd(unsigned sd_id, unsigned *acc_mode, unsigned *speed_id);
 __stdcall int SD_speed_id(unsigned sd_id, unsigned *speed_id);
 __stdcall int SetSDClkFrequency(unsigned sd_id, unsigned speed_id);
 __stdcall int SD_CMD55_SendAppCommand(unsigned sd_id, unsigned rca);
-__stdcall void SD_cmd_setup(int sd_id, unsigned cmd, unsigned param);
-__stdcall void SD_cmd_setup_resp48b(int sd_id);
-__stdcall void SD_cmd_send(int sd_id,unsigned unk);
-__stdcall int sdconWaitInterrupt(int sd_id, unsigned timeout);
+__stdcall void SD_cmd_setup(unsigned sd_id, unsigned cmd, unsigned param);
+__stdcall void SD_cmd_setup_resp48b(unsigned sd_id);
+__stdcall void SD_cmd_send(unsigned sd_id,unsigned unk);
+__stdcall int sdconWaitInterrupt(unsigned sd_id, unsigned timeout);
+__stdcall int SD_HWInit(unsigned sd_id);
+__stdcall unsigned EnableSDCONHClk(unsigned sd_id);  // name from 200D, required before sending CMDnn
+__stdcall unsigned EnableSDClk(unsigned sd_id); // name from 200D, required before sending CMDnn
+__stdcall void DisableSDClk(unsigned sd_id);
+__stdcall void DisableSDCONHClk(unsigned sd_id);
+ // sets clock related MMIO, base is address for sd_id == 0
+__stdcall void SD_set_clk_reg(unsigned sd_id,unsigned base_addr,unsigned val);
+__stdcall unsigned SD_get_clk_reg(unsigned sd_id,unsigned base_addr);
 
 #endif // FW_FUNCTIONS_H
