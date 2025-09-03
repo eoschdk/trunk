@@ -15,8 +15,11 @@
 #include "ptp_op_names.h"
 
 // arbitrary standardized constant for search "near" a string ref etc
-// could base on ADR etc reach
+// almost all fall in this range
 #define SEARCH_NEAR_REF_RANGE 1024
+// adr range is up to 4096 (without shifts), pad slightly for alignment rounding
+// and to allow disassembly to find correct alignment
+#define SEARCH_NEAR_REF_RANGE_FULL 4112
 
 #define SIG_NEAR_OFFSET_MASK    0x00FF
 #define SIG_NEAR_COUNT_MASK     0xFF00
@@ -24,11 +27,17 @@
 #define SIG_NEAR_REV            0x10000
 #define SIG_NEAR_INDIRECT       0x20000
 #define SIG_NEAR_JMP_SUB        0x40000
+// extended search range, supported by
+//  sig_match_near_str / users of find_call_near_str
+//  sig_match_str_arg_call / users of find_str_arg_call
+//  sig_match_func_using_str
+#define SIG_NEAR_FULL_RANGE     0x80000
 #define SIG_NEAR_AFTER(max_insns,n) (((max_insns)&SIG_NEAR_OFFSET_MASK) \
                                 | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
 #define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
 #define SIG_NEAR_GET_OFFSET(param) ((param)&SIG_NEAR_OFFSET_MASK)
 #define SIG_NEAR_GET_COUNT(param) (((param)&SIG_NEAR_COUNT_MASK)>>SIG_NEAR_COUNT_SHIFT)
+#define SIG_NEAR_GET_RANGE(param) ((param)&SIG_NEAR_FULL_RANGE?SEARCH_NEAR_REF_RANGE_FULL:SEARCH_NEAR_REF_RANGE)
 
 // generic param bits for specifying which memory regions to search
 // currently supported by
@@ -5205,8 +5214,9 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("find_call_near_str: %s invalid search_adr 0x%08x\n",rule->name,search_adr);
         return 0;
     }
-    uint32_t search_start = adr_range_clamp_adr_align4(rng, search_adr - SEARCH_NEAR_REF_RANGE);
-    uint32_t search_end = adr_range_clamp_adr_align4(rng, search_adr + SEARCH_NEAR_REF_RANGE);
+    uint32_t range = SIG_NEAR_GET_RANGE(rule->param);
+    uint32_t search_start = adr_range_clamp_adr_align4(rng, search_adr - range);
+    uint32_t search_end = adr_range_clamp_adr_align4(rng, search_adr + range);
 
     // printf("find_call_near_str: %s @ 0x%08x max_insns %d n %d %s\n",rule->name,search_adr,max_insns,n,(rule->param & SIG_NEAR_REV)?"rev":"fwd");
     // TODO should handle multiple instances of string
@@ -5232,6 +5242,7 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             }
         }
         // Not found - look for previous branch to ref_adr
+        // this should be within function branch, don't use extended search range flag here
         disasm_iter_init(fw, is, (ADR_ALIGN4(ref_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default);
         int i;
         for (i=0; i<50; i+=1) {
@@ -5325,8 +5336,9 @@ uint32_t find_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             printf("find_str_arg_call: %s invalid str_adr 0x%08x\n",rule->name,str_adr);
             return 0;
         }
-        uint32_t search_start = adr_range_clamp_adr_align4(rng, str_adr - SEARCH_NEAR_REF_RANGE);
-        uint32_t search_end = adr_range_clamp_adr_align4(rng, str_adr + SEARCH_NEAR_REF_RANGE);
+        uint32_t range = SIG_NEAR_GET_RANGE(rule->param);
+        uint32_t search_start = adr_range_clamp_adr_align4(rng, str_adr - range);
+        uint32_t search_end = adr_range_clamp_adr_align4(rng, str_adr + range);
 
         disasm_iter_init(fw,is,search_start | fw->thumb_default); // reset to a bit before where the string was found
         uint32_t call_adr = find_const_ref_match(fw, is, search_end - search_start, 8, reg, str_adr, match, FIND_CONST_REF_MATCH_ANY);
@@ -5665,8 +5677,9 @@ int sig_match_func_using_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_func_using_str: %s invalid str_adr 0x%08x\n",rule->name,str_adr);
         return 0;
     }
-    uint32_t search_start = adr_range_clamp_adr_align4(rng, str_adr - SEARCH_NEAR_REF_RANGE);
-    uint32_t search_end = adr_range_clamp_adr_align4(rng, str_adr + SEARCH_NEAR_REF_RANGE);
+    uint32_t range = SIG_NEAR_GET_RANGE(rule->param);
+    uint32_t search_start = adr_range_clamp_adr_align4(rng, str_adr - range);
+    uint32_t search_end = adr_range_clamp_adr_align4(rng, str_adr + range);
 
     disasm_iter_init(fw,is,search_start | fw->thumb_default); // reset to a bit before where the string was found
     // Find references to string
