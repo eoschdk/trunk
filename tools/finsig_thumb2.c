@@ -594,6 +594,13 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "SD_cmd_setup_resp48b", OPTIONAL|UNUSED },// set response size to 48 bits and some unknown flags 0x2701
     { "SD_cmd_send", OPTIONAL|UNUSED },// probably triggers actual sending of SD command
     { "sdconWaitInterrupt", OPTIONAL|UNUSED },
+    { "SD_HWInit", OPTIONAL|UNUSED }, // helper for enable/disable
+    { "EnableSDCONHClk", OPTIONAL|UNUSED }, // name from 200D, required before sending CMDnn
+    { "EnableSDClk", OPTIONAL|UNUSED }, // name from 200D, required before sending CMDnn
+    { "DisableSDClk", OPTIONAL|UNUSED }, // paired with above
+    { "DisableSDCONHClk", OPTIONAL|UNUSED }, // paired with above
+    { "SD_set_clk_reg", OPTIONAL|UNUSED }, // sets clock related MMIO
+    { "SD_get_clk_reg", OPTIONAL|UNUSED },
 
     {0,0,0},
 };
@@ -6214,6 +6221,15 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,    "SD_cmd_setup_resp48b","SD_CMD55_SendAppCommand",  SIG_NAMED_NTH(2,SUB) },
 {sig_match_named,    "SD_cmd_send",         "SD_CMD55_SendAppCommand",  SIG_NAMED_NTH(3,SUB) },
 {sig_match_named,    "sdconWaitInterrupt",  "SD_CMD55_SendAppCommand",  SIG_NAMED_NTH(4,SUB) },
+{sig_match_func_using_str, "SD_HWInit","HWInit(%d)", SIG_USESTR_BACK(1)|SIG_SEARCH_ROM, SIG_DRY_MAX(52), SIG_OPTIONAL },
+{sig_match_func_using_str, "SD_HWInit","HWInit(%d)s",SIG_USESTR_BACK(1)|SIG_SEARCH_ROM, SIG_DRY_MAX(52), SIG_OPTIONAL },
+{sig_match_func_using_str, "SD_HWInit","HWInit(%d)s",SIG_USESTR_BACK(5)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_FULL_RANGE, SIG_DRY_MIN(53) },
+{sig_match_named,    "EnableSDCONHClk",     "SD_HWInit",  SIG_NAMED_NTH(2,SUB) },
+{sig_match_named,    "EnableSDClk",         "SD_HWInit",  SIG_NAMED_NTH(4,SUB) },
+{sig_match_named,    "DisableSDClk",        "SD_HWInit",  SIG_NAMED_NTH(8,SUB) },
+{sig_match_named,    "DisableSDCONHClk",    "SD_HWInit",  SIG_NAMED_NTH(9,SUB) },
+{sig_match_named,    "SD_set_clk_reg",      "EnableSDCONHClk",  SIG_NAMED_NTH(1,SUB) },
+{sig_match_named,    "SD_get_clk_reg",      "EnableSDCONHClk",  SIG_NAMED_NTH(2,JMP_SUB) },
 
 {NULL},
 };
