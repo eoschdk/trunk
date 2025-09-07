@@ -56,8 +56,5 @@ NHSTUB(GetLensFocalLengthAll                  ,0xFC25D0BF)
 NHSTUB(displayblankscreen,                     0xFC3330C5)
 NHSTUB(undisplayblankscreen,                   0xFC33314B)
 
-// trial
-NHSTUB(refresh_bitmap_buf_from,                0xfc143435)
-
 NHSTUB(VTMLock                                ,0xfc37eea1)
 NHSTUB(VTMUnlock                              ,0xfc37f071)
