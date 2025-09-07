@@ -6226,8 +6226,11 @@ sig_rule_t sig_rules_main[]={
 {sig_match_func_using_str, "SD_HWInit","HWInit(%d)s",SIG_USESTR_BACK(5)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_FULL_RANGE, SIG_DRY_MIN(53) },
 {sig_match_named,    "EnableSDCONHClk",     "SD_HWInit",  SIG_NAMED_NTH(2,SUB) },
 {sig_match_named,    "EnableSDClk",         "SD_HWInit",  SIG_NAMED_NTH(4,SUB) },
-{sig_match_named,    "DisableSDClk",        "SD_HWInit",  SIG_NAMED_NTH(8,SUB) },
-{sig_match_named,    "DisableSDCONHClk",    "SD_HWInit",  SIG_NAMED_NTH(9,SUB) },
+// HWInit varies in later cams, cutoff at 55 avoid ERR/NG string change
+{sig_match_named,    "DisableSDClk",        "SD_HWInit",  SIG_NAMED_NTH(8,SUB), SIG_DRY_MAX(55) },
+{sig_match_named,    "DisableSDCONHClk",    "SD_HWInit",  SIG_NAMED_NTH(9,SUB), SIG_DRY_MAX(55) },
+{sig_match_near_str, "DisableSDClk",        "%s(%d) sddomInitializeSDCard2nd() ERR!\n", SIG_NEAR_BEFORE(6,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(56) },
+{sig_match_near_str, "DisableSDCONHClk",    "%s(%d) sddomInitializeSDCard2nd() ERR!\n", SIG_NEAR_AFTER(8,2)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(56) },
 {sig_match_named,    "SD_set_clk_reg",      "EnableSDCONHClk",  SIG_NAMED_NTH(1,SUB) },
 {sig_match_named,    "SD_get_clk_reg",      "EnableSDCONHClk",  SIG_NAMED_NTH(2,JMP_SUB) },
 
@@ -6741,7 +6744,7 @@ void find_exception_handlers(firmware *fw, iter_state_t *is)
     }
     // both d6 and d7 appear to have an ARM instruction in reset, and thumb in the remaining
     // which appears contrary to arm documentation (ARM DDI 0406C.c (ID051414)
-    // On digic 6, Reset appears to be an infinte loop, so must not be expected in any case
+    // On digic 6, Reset appears to be an infinite loop, so must not be expected in any case
     disasm_iter_init(fw, is, ex_vec);
     disasm_iter(fw, is);
 
