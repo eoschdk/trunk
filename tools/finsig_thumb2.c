@@ -601,6 +601,12 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "DisableSDCONHClk", OPTIONAL|UNUSED }, // paired with above
     { "SD_set_clk_reg", OPTIONAL|UNUSED }, // sets clock related MMIO
     { "SD_get_clk_reg", OPTIONAL|UNUSED },
+    { "SD_CMD6_SwitchFunction", OPTIONAL|UNUSED },
+    { "SD_set_ctrl_reg", OPTIONAL|UNUSED }, // set sd controller register for commanding etc
+    { "SD_set_ctrl_reg_bits", OPTIONAL|UNUSED }, // set bits with mask
+    { "SD_get_ctrl_reg", OPTIONAL|UNUSED },
+    { "SdcommonMicroWait", OPTIONAL|UNUSED }, // SD api microsecond resolution wait
+    { "microwait", OPTIONAL|UNUSED }, // generic microsecond resolution wait
 
     {0,0,0},
 };
@@ -6233,6 +6239,19 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str, "DisableSDCONHClk",    "%s(%d) sddomInitializeSDCard2nd() ERR!\n", SIG_NEAR_AFTER(8,2)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(56) },
 {sig_match_named,    "SD_set_clk_reg",      "EnableSDCONHClk",  SIG_NAMED_NTH(1,SUB) },
 {sig_match_named,    "SD_get_clk_reg",      "EnableSDCONHClk",  SIG_NAMED_NTH(2,JMP_SUB) },
+{sig_match_near_str, "SD_CMD6_SwitchFunction","%s(%d) CMD6_SwitchFunction_SD() NG!\n", SIG_NEAR_BEFORE(7,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MAX(55) },
+// d7 compiler puts call far from string ref
+{sig_match_near_str, "SD_CMD6_SwitchFunction","%s(%d) CMD6_SwitchFunction_SD() ERR!\n", SIG_NEAR_BEFORE(7,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(56), SIG_NO_D7 },
+{sig_match_near_str, "SD_CMD6_SwitchFunction","%s(%d) Function ERROR ( error with argument ) ERR!\n", SIG_NEAR_AFTER(8,1), SIG_DRY_MIN(58), SIG_NO_D6 },
+{sig_match_named,    "SD_set_ctrl_reg",     "SD_cmd_setup",             SIG_NAMED_NTH(1,SUB) },
+{sig_match_named,    "SD_set_ctrl_reg_bits","SD_cmd_send",              SIG_NAMED_NTH(2,SUB) },
+{sig_match_named,    "SD_get_ctrl_reg",     "SD_CMD6_SwitchFunction",   SIG_NAMED_NTH(1,SUB) },
+// d7 uses some kind of delay loop instead of microwait in DisableSDClk
+{sig_match_named,    "SdcommonMicroWait",   "DisableSDClk", SIG_NAMED_NTH(2,SUB), SIG_DRY_ANY, SIG_NO_D7},
+// dry58+ uses microwait in hwinit
+{sig_match_named,    "SdcommonMicroWait",   "SD_HWInit",    SIG_NAMED_NTH(5,SUB), SIG_DRY_MIN(58), SIG_NO_D6},
+{sig_match_named,    "microwait",           "SdcommonMicroWait",SIG_NAMED_NTH(3,JMP_SUB), SIG_DRY_ANY, SIG_NO_D7},
+{sig_match_named,    "microwait",           "SdcommonMicroWait",SIG_NAMED_NTH(1,JMP_SUB), SIG_DRY_MIN(58), SIG_NO_D6},
 
 {NULL},
 };

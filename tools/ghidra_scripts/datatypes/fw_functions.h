@@ -607,8 +607,17 @@ __stdcall unsigned EnableSDCONHClk(unsigned sd_id);  // name from 200D, required
 __stdcall unsigned EnableSDClk(unsigned sd_id); // name from 200D, required before sending CMDnn
 __stdcall void DisableSDClk(unsigned sd_id);
 __stdcall void DisableSDCONHClk(unsigned sd_id);
- // sets clock related MMIO, base is address for sd_id == 0
+// sets clock related MMIO. On digic 6 2nd arg is address like d2090608 for sd_id == 0
 __stdcall void SD_set_clk_reg(unsigned sd_id,unsigned base_addr,unsigned val);
 __stdcall unsigned SD_get_clk_reg(unsigned sd_id,unsigned base_addr);
+// sets SD MMIOs for commands etc. On digic 6 2nd param for these is an offset added to 0xc8000000
+__stdcall void SD_set_ctrl_reg(unsigned sd_id,unsigned offset,unsigned val);
+// sets *reg = *reg & mask | val, wth interrupts disabled
+__stdcall void SD_set_ctrl_reg_bits(unsigned sd_id,unsigned offset,unsigned mask,unsigned val);
+__stdcall unsigned SD_get_ctrl_reg(unsigned sd_id,unsigned offset);
+// sd_id is unused except for error message
+// usec seems to be an int since microwait checks for negative
+__stdcall void SdcommonMicroWait(unsigned sd_id,int usec);
+__stdcall int microwait(int usec);
 
 #endif // FW_FUNCTIONS_H
