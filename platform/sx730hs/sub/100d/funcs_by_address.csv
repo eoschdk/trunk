@@ -907,6 +907,7 @@
 0xfc2992d9,SoundDevAprocSetPerifSpMute_FW
 0xfc29a12d,task_MetaCtg
 0xfc29ff15,task_BrtCalcTask
+0xfc2a5fa3,SD_CMD6_SwitchFunction
 0xfc2a7c4b,SD_CMD55_SendAppCommand
 0xfc2a923b,SD_cmd_setup_resp48b
 0xfc2a9b7d,SD_cmd_setup
@@ -916,6 +917,9 @@
 0xfc2af0cb,task_ExpDrv
 0xfc2af0cb,task_ExpDrvTask
 0xfc2d8279,UIFS_WirelessExecuteSendForever_FW
+0xfc2df5ed,SD_get_ctrl_reg
+0xfc2df5fb,SD_set_ctrl_reg
+0xfc2df609,SD_set_ctrl_reg_bits
 0xfc2e0dc3,task_Cave2PbTask
 0xfc2e342b,EnableDebugLogMode_FW
 0xfc2e3435,DisableDebugLogMode_FW
@@ -1302,6 +1306,7 @@
 0xfc3b3afd,LocalTime
 0xfc3b3c03,j_LocalTime
 0xfc3b3c05,j_strftime
+0xfc3b4217,microwait
 0xfc3b4379,strftime
 0xfc3b4785,sscanf_FW
 0xfc3b47fd,srand
@@ -2214,6 +2219,7 @@
 0xfc513453,task_Cave2RecTask
 0xfc514431,SD_take_sem
 0xfc51443d,SD_give_sem
+0xfc5144b5,SdcommonMicroWait
 0xfc515e49,task_TricDecVTask
 0xfc518025,GetCurrentAdjImgDriveType_FW
 0xfc518031,GetCurrentImgDrvMode_FW

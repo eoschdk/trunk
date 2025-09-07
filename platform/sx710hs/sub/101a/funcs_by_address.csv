@@ -20,6 +20,8 @@
 0x010e792f,SD_GetSpd
 0x010eda81,SD_take_sem
 0x010eda8d,SD_give_sem
+0x010edb05,SdcommonMicroWait
+0x010ee95b,SD_CMD6_SwitchFunction
 0x010f0573,SD_CMD55_SendAppCommand
 0x010f193d,SD_cmd_setup_resp48b
 0x010f217f,SD_cmd_setup
@@ -34,9 +36,13 @@
 0x010f3f41,SD_get_clk_reg
 0x010f3f4d,SD_set_clk_reg
 0x010f3f61,DisableSDClk
+0x010f4379,j_microwait
 0x010f4383,j_mktime_ext
 0x010f438d,j2_strftime
 0x010f44b0,j_dcache_flush_and_enable
+0x010f4625,SD_get_ctrl_reg
+0x010f4633,SD_set_ctrl_reg
+0x010f4641,SD_set_ctrl_reg_bits
 0x010f46f9,SD_debug_log
 0x010f4771,SD_error_log
 0x011008fc,dry_memcpy_bytes
@@ -1219,6 +1225,7 @@
 0xfc38d6e7,close
 0xfc38d7ed,Read
 0xfc38d7ed,Read_FW
+0xfc38ebab,microwait
 0xfc390757,task_NfcCon_EvtTask
 0xfc390953,NFCEvt.Create_FW
 0xfc3909e5,NFCEvt.Initialize_FW

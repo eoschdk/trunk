@@ -610,6 +610,7 @@
 0xfc151483,close
 0xfc151589,Read
 0xfc151589,Read_FW
+0xfc1526d7,microwait
 0xfc153239,task__imageSensorTask
 0xfc154029,NFCEvt.IsNfcStart_FW
 0xfc154037,task_NfcCon_EvtTask
@@ -995,6 +996,8 @@
 0xfc2e2c41,task_MetaCtg
 0xfc2e6401,SD_take_sem
 0xfc2e640d,SD_give_sem
+0xfc2e6485,SdcommonMicroWait
+0xfc2ed629,SD_CMD6_SwitchFunction
 0xfc2ef2d3,SD_CMD55_SendAppCommand
 0xfc2f08c3,SD_cmd_setup_resp48b
 0xfc2f11e3,SD_cmd_setup
@@ -1021,6 +1024,9 @@
 0xfc31a3f3,SetCzDebugFocusMode_FW
 0xfc31a3f3,SetCzDebugSubjectDistance_FW
 0xfc31a3ff,CzDebugPrintToFile_FW
+0xfc331fad,SD_get_ctrl_reg
+0xfc331fbb,SD_set_ctrl_reg
+0xfc331fc9,SD_set_ctrl_reg_bits
 0xfc334e4b,UIFS_WirelessExecuteSendForever_FW
 0xfc33b453,task_Cave2PbTask
 0xfc33dbb9,SD_debug_log

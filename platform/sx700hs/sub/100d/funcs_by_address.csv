@@ -1068,7 +1068,9 @@
 0xfc25d21f,PT_MFOff
 0xfc262e89,SD_take_sem
 0xfc262e95,SD_give_sem
+0xfc262f0d,SdcommonMicroWait
 0xfc263637,task_MetaCtg
+0xfc267657,SD_CMD6_SwitchFunction
 0xfc269213,SD_CMD55_SendAppCommand
 0xfc26a43f,SD_cmd_setup_resp48b
 0xfc271dbb,SD_cmd_setup
@@ -1270,6 +1272,9 @@
 0xfc2e5e57,BeepDrive_FW
 0xfc2e5e6b,BeepDriveComp_FW
 0xfc2e5e7f,BeepDriveStop_FW
+0xfc2e65a1,SD_get_ctrl_reg
+0xfc2e65af,SD_set_ctrl_reg
+0xfc2e65bd,SD_set_ctrl_reg_bits
 0xfc2e6645,SD_debug_log
 0xfc2e66bd,SD_error_log
 0xfc2ed5f9,ui_malloc_default
@@ -1443,6 +1448,7 @@
 0xfc3c5f15,task_TricInitTask
 0xfc3d4921,memShow_FW
 0xfc3d4e4d,GetMemInfo
+0xfc3d639b,microwait
 0xfc3d661d,StartPlayModeMenu_FW
 0xfc3d662f,StartRecModeMenu_FW
 0xfc3d66db,ShutdownRecModeMenu_FW

@@ -611,6 +611,7 @@
 0xfc13d08f,close
 0xfc13d195,Read
 0xfc13d195,Read_FW
+0xfc13e303,microwait
 0xfc13e449,omar_init
 0xfc13e57d,task_WBCtrl
 0xfc13f443,task_DevelopModule
@@ -1064,6 +1065,8 @@
 0xfc25dbb5,task_MetaCtg
 0xfc260ad5,SD_take_sem
 0xfc260ae1,SD_give_sem
+0xfc260b57,SdcommonMicroWait
+0xfc2619a7,SD_CMD6_SwitchFunction
 0xfc262fbb,SD_CMD55_SendAppCommand
 0xfc264115,SD_cmd_setup_resp48b
 0xfc2646f3,task_CorctTask
@@ -1285,6 +1288,9 @@
 0xfc2e0def,GetCurrentShutterSpeed
 0xfc2e0def,GetCurrentShutterSpeed_FW
 0xfc2e1029,GetCurrentExposureTime_FW
+0xfc2e21bd,SD_get_ctrl_reg
+0xfc2e21cb,SD_set_ctrl_reg
+0xfc2e21d9,SD_set_ctrl_reg_bits
 0xfc2e2261,SD_debug_log
 0xfc2e22d9,SD_error_log
 0xfc2ea9fd,SetPropertyCase

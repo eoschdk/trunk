@@ -76,6 +76,8 @@
 0x010ec909,SD_GetSpd
 0x010f26c1,SD_take_sem
 0x010f26cd,SD_give_sem
+0x010f2745,SdcommonMicroWait
+0x010f3563,SD_CMD6_SwitchFunction
 0x010f511f,SD_CMD55_SendAppCommand
 0x010f6377,SD_cmd_setup_resp48b
 0x010f6b7f,SD_cmd_setup
@@ -84,6 +86,7 @@
 0x010f6ccf,sdconWaitInterrupt
 0x010f776d,j2_GetSRAndDisableInterrupt
 0x010f7777,j2_SetSR
+0x010f7869,j_microwait
 0x010f7905,j_mktime_ext
 0x010f7a20,j_dcache_flush_and_enable
 0x010f8533,EnableSDClk
@@ -94,6 +97,9 @@
 0x010f8ce9,SD_get_clk_reg
 0x010f8cf5,SD_set_clk_reg
 0x010f8d09,DisableSDClk
+0x010f8f15,SD_get_ctrl_reg
+0x010f8f23,SD_set_ctrl_reg
+0x010f8f31,SD_set_ctrl_reg_bits
 0x010f8fb9,SD_debug_log
 0x010f9031,SD_error_log
 0x01106910,dry_memcpy_bytes
@@ -686,6 +692,7 @@
 0xfc134e01,VbattGet
 0xfc134e01,VbattGet_FW
 0xfc1350f9,task_ClockSave
+0xfc136bab,microwait
 0xfc136d35,omar_init
 0xfc136ff1,task_DevelopModule
 0xfc138a07,imager_active_callback

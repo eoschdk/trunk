@@ -1059,6 +1059,7 @@
 0xfc20ee2b,PT_MFOn
 0xfc20ee5b,PT_MFOff
 0xfc213615,SD_cmd_setup_resp48b
+0xfc2142eb,SD_CMD6_SwitchFunction
 0xfc214f8b,SD_CMD55_SendAppCommand
 0xfc21c241,task_MetaCtg
 0xfc21f499,SD_cmd_setup
@@ -1199,6 +1200,9 @@
 0xfc28c991,IsFocusLensOutSidePosition_FW
 0xfc28c9af,GetFocusResetPosition_FW
 0xfc28ca09,GetFocusDefaultResetPosition_FW
+0xfc28dfc5,SD_get_ctrl_reg
+0xfc28dfd3,SD_set_ctrl_reg
+0xfc28dfe1,SD_set_ctrl_reg_bits
 0xfc28e069,SD_debug_log
 0xfc28e0df,SD_error_log
 0xfc28fd73,DeleteFile_Fut
@@ -1442,6 +1446,7 @@
 0xfc3733d1,task_TricEncMsgTask
 0xfc373dc1,task_TricInitTask
 0xfc38e9b9,memShow_FW
+0xfc38f847,microwait
 0xfc38f98d,strstr
 0xfc390205,task_ImgPlyTask
 0xfc390bdb,task_DevelopModule
@@ -2248,6 +2253,7 @@
 0xfc4362a9,task_CtgTotalTask
 0xfc437d4d,SD_take_sem
 0xfc437d59,SD_give_sem
+0xfc437dcf,SdcommonMicroWait
 0xfc437f01,EnableSDClk
 0xfc437f27,j_DisableSDClk
 0xfc437fd5,SetSDClkFrequency

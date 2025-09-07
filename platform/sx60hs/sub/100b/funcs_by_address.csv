@@ -76,6 +76,8 @@
 0x010ec8c9,SD_GetSpd
 0x010f2681,SD_take_sem
 0x010f268d,SD_give_sem
+0x010f2705,SdcommonMicroWait
+0x010f3523,SD_CMD6_SwitchFunction
 0x010f50df,SD_CMD55_SendAppCommand
 0x010f6337,SD_cmd_setup_resp48b
 0x010f6b3f,SD_cmd_setup
@@ -84,6 +86,7 @@
 0x010f6c8f,sdconWaitInterrupt
 0x010f772d,j2_GetSRAndDisableInterrupt
 0x010f7737,j2_SetSR
+0x010f7829,j_microwait
 0x010f78c5,j_mktime_ext
 0x010f79e0,j_dcache_flush_and_enable
 0x010f84f3,EnableSDClk
@@ -94,6 +97,9 @@
 0x010f8ca9,SD_get_clk_reg
 0x010f8cb5,SD_set_clk_reg
 0x010f8cc9,DisableSDClk
+0x010f8ed5,SD_get_ctrl_reg
+0x010f8ee3,SD_set_ctrl_reg
+0x010f8ef1,SD_set_ctrl_reg_bits
 0x010f8f79,SD_debug_log
 0x010f8ff1,SD_error_log
 0x011068d0,dry_memcpy_bytes
@@ -660,6 +666,7 @@
 0xfc137779,VbattGet
 0xfc137779,VbattGet_FW
 0xfc137a71,task_ClockSave
+0xfc13938b,microwait
 0xfc1394f1,omar_init
 0xfc13aa25,task_EFChargeT
 0xfc13ad3f,EF.IsChargeFull_FW

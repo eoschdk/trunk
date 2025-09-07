@@ -538,6 +538,7 @@
 0xe02b2a6f,LcdCon_ShowLcdParameter_FW
 0xe02b2a95,LcdCon_SaveLcdParameter_FW
 0xe02b34e7,task_BrtCalcTask
+0xe02b96b9,SD_CMD6_SwitchFunction
 0xe02baf35,SD_CMD55_SendAppCommand
 0xe02bc30f,SD_cmd_setup_resp48b
 0xe02bcae7,SD_cmd_setup
@@ -546,6 +547,9 @@
 0xe02bcc37,sdconWaitInterrupt
 0xe02d0ad9,task_ExpDrv
 0xe02d0ad9,task_ExpDrvTask
+0xe02e5351,SD_get_ctrl_reg
+0xe02e535f,SD_set_ctrl_reg
+0xe02e536d,SD_set_ctrl_reg_bits
 0xe02e548f,EnableDebugLogMode_FW
 0xe02e5499,DisableDebugLogMode_FW
 0xe02e58ff,task_ZoomEvent
@@ -893,6 +897,7 @@
 0xe045165f,task_MovieInit
 0xe045197f,strchr
 0xe04519d5,task_OBCtrlTask
+0xe045bab9,microwait
 0xe045be0d,imager_active_callback
 0xe045bea3,ImagerActivate
 0xe045bf2d,ClearImageDrive_FW
@@ -2482,6 +2487,7 @@
 0xe05a8319,SD_GetSpd
 0xe05a9f21,SD_take_sem
 0xe05a9f2d,SD_give_sem
+0xe05a9fb7,SdcommonMicroWait
 0xe05ac611,SD_get_clk_reg
 0xe05ac61d,SD_set_clk_reg
 0xe05ac633,DisableSDClk
