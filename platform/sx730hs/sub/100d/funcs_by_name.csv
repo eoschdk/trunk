@@ -305,8 +305,8 @@
 0xfc4410c5,DisableMacroIS_FW
 0xfc43e403,DisableMechaCircuit_FW
 0xfc43e4ad,DisableResetGpio_FW
-0xfc58a3c9,DisableSDClk
-0xfc58b7d9,DisableSDCONHClk
+0xfc58b7d9,DisableSDClk
+0xfc58b523,DisableSDCONHClk
 0xfc44078d,DisableZoomActuatorSpeedLog_FW
 0xfc43e447,DisableZoomEncoderCircuit_FW
 0xfc43ff1b,DisableZoomLensElectricControl_FW
@@ -1159,7 +1159,7 @@
 0xfc301d8c,j_CreateTask_low
 0xfc069151,j_CreateUserSettingMirror_FW
 0x010ee6ec,j_dcache_flush_and_enable
-0xfc58b029,j_DisableSDCONHClk
+0xfc58b029,j_DisableSDClk
 0xfc301d54,j_dry_error_printf
 0xfc301dec,j_dry_memcpy
 0xfc30154d,j_dry_memcpy_bytes

@@ -2654,14 +2654,14 @@
 0xfc589b11,kbd_read_keys
 0xfc589b47,kbd_p1_f
 0xfc589b4f,kbd_p1_f_cont
-0xfc58a3c9,DisableSDClk
 0xfc58b003,EnableSDClk
-0xfc58b029,j_DisableSDCONHClk
+0xfc58b029,j_DisableSDClk
 0xfc58b0d7,SetSDClkFrequency
 0xfc58b509,EnableSDCONHClk
+0xfc58b523,DisableSDCONHClk
 0xfc58b7b9,SD_get_clk_reg
 0xfc58b7c5,SD_set_clk_reg
-0xfc58b7d9,DisableSDCONHClk
+0xfc58b7d9,DisableSDClk
 0xfc58b9ed,drysh_FW
 0xfc5c8485,j_StartCameraLog_FW
 0xfc5c8489,j_ShowCameraLog_FW
