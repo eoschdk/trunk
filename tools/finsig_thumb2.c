@@ -31,7 +31,9 @@
 //  sig_match_near_str / users of find_call_near_str
 //  sig_match_str_arg_call / users of find_str_arg_call
 //  sig_match_func_using_str
-#define SIG_NEAR_FULL_RANGE     0x80000
+#define SIG_NEAR_FULL_RANGE     0x080000
+// substring match
+#define SIG_NEAR_SUBSTR         0x100000
 #define SIG_NEAR_AFTER(max_insns,n) (((max_insns)&SIG_NEAR_OFFSET_MASK) \
                                 | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
 #define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
@@ -5189,11 +5191,13 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t search_flags = SIG_SEARCH_GET_F(rule->param);
 
+    size_t slen = (rule->param&SIG_NEAR_SUBSTR)?strlen(rule->ref_name):strlen(rule->ref_name)+1;
+
     uint32_t str_adr;
     if(rule->param & SIG_NEAR_INDIRECT) {
-        str_adr = find_str_bytes(fw,rule->ref_name); // indirect string could be in data area
+        str_adr = find_next_bytes_range(fw,rule->ref_name, slen, fw->base, 0);
     } else {
-        str_adr = find_next_str_bytes_code(fw, rule->ref_name, search_flags, 0); // direct string must be near actual code
+        str_adr = find_next_bytes_code(fw, rule->ref_name, slen, search_flags, 0); // direct string must be near actual code
     }
     if(!str_adr) {
         printf("find_call_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
@@ -5310,6 +5314,7 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // arg register and call type set by SIG_STRCALL_ macros
 // NOTE types are currently exclusive, not a bitmask
 // SIG_SEARCH_* can be used to search specific code regions
+// supports SIG_NEAR_FULL_RANGE and SIG_NEAR_SUBSTR
 // does not currently handle indirect refs
 // handles multiple instances of string
 uint32_t find_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -5334,7 +5339,8 @@ uint32_t find_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
 
     uint32_t search_flags = SIG_SEARCH_GET_F(rule->param);
-    uint32_t str_adr = find_next_str_bytes_code(fw, rule->ref_name, search_flags, 0);
+    size_t slen = (rule->param&SIG_NEAR_SUBSTR)?strlen(rule->ref_name):strlen(rule->ref_name)+1;
+    uint32_t str_adr = find_next_bytes_code(fw, rule->ref_name, slen, search_flags, 0);
     if(!str_adr) {
         if(!(rule->flags & SIG_OPTIONAL)) {
             printf("find_str_arg_call: %s failed to find ref %s\n",rule->name,rule->ref_name);
@@ -5663,12 +5669,14 @@ int sig_match_named_next_func(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 // Match function using string, use SIG_USESTR* macros to define forward/backward limits
 // and SIG_SEARCH_* to specify memory ranges
+// supports SIG_NEAR_FULL_RANGE and SIG_NEAR_SUBSTR
 // backtracking assumes function begins with push starting with R4
 // forward assumes string ref is first instruction of function
 // Either may not be true!
 int sig_match_func_using_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_next_str_bytes_code(fw, rule->ref_name, SIG_SEARCH_GET_F(rule->param), 0);
+    size_t slen = (rule->param&SIG_NEAR_SUBSTR)?strlen(rule->ref_name):strlen(rule->ref_name)+1;
+    uint32_t str_adr = find_next_bytes_code(fw, rule->ref_name, slen, SIG_SEARCH_GET_F(rule->param), 0);
     if(!str_adr) {
         if(!(rule->flags & SIG_OPTIONAL)) {
             printf("sig_match_func_using_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
@@ -6189,12 +6197,8 @@ sig_rule_t sig_rules_main[]={
 // note this doesn't match on M6, which has two sets of possible IO funcs
 {sig_match_sd_io_func,   "GetSDCardTotalSect",  "init_sd_io_funcs",     0x64 | SIG_SD_IO_FUNC_STR },
 // sx280 is different from other dry52, no trailing "s" on the logs
-{sig_match_func_using_str,  "SD_ChgClkSpd",     "ChgClkSpd(%d,%d)",     SIG_USESTR_BACK(11)|SIG_SEARCH_ROM,   SIG_DRY_MAX(52), SIG_OPTIONAL }, // sx280
-{sig_match_func_using_str,  "SD_ChgClkSpd",     "ChgClkSpd(%d,%d)s",    SIG_USESTR_BACK(11)|SIG_SEARCH_ROM,   SIG_DRY_MAX(52), SIG_OPTIONAL }, // other r52
-{sig_match_func_using_str,  "SD_ChgClkSpd",     "ChgClkSpd(%d,%d)s",    SIG_USESTR_BACK(11)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(53) }, // all others, not optional
-{sig_match_func_using_str,  "SD_GetTtlSect",    "GetTtlSect(%d)",       SIG_USESTR_BACK(7) |SIG_SEARCH_ROM,   SIG_DRY_MAX(52), SIG_OPTIONAL }, // sx280
-{sig_match_func_using_str,  "SD_GetTtlSect",    "GetTtlSect(%d)s",      SIG_USESTR_BACK(7) |SIG_SEARCH_ROM,   SIG_DRY_MAX(52), SIG_OPTIONAL }, // other r52
-{sig_match_func_using_str,  "SD_GetTtlSect",    "GetTtlSect(%d)s",      SIG_USESTR_BACK(10)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(53) }, // all others, not optional
+{sig_match_func_using_str,  "SD_ChgClkSpd",     "ChgClkSpd(%d,%d)",     SIG_USESTR_BACK(11)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR },
+{sig_match_func_using_str,  "SD_GetTtlSect",    "GetTtlSect(%d)",       SIG_USESTR_BACK(10)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR },
 {sig_match_named,           "SD_take_sem",      "SD_ChgClkSpd",         SIG_NAMED_NTH(1,SUB), SIG_DRY_MAXP(59,3) },
 {sig_match_named,           "SD_give_sem",      "SD_GetTtlSect",        SIG_NAMED_NTH(3,SUB), SIG_DRY_MAXP(59,3) },
 {sig_match_named,           "SD_debug_log",     "SD_GetTtlSect",        SIG_NAMED_NTH(2,SUB), SIG_DRY_MAXP(59,3) },
@@ -6210,25 +6214,19 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,           "SD_give_sem",      "SD_GetTtlSect",        SIG_NAMED_NTH(4,SUB), SIG_DRY_MINP(59,4), SIG_NO_D6 },
 {sig_match_named,           "SD_debug_log",     "SD_GetTtlSect",        SIG_NAMED_NTH(3,SUB), SIG_DRY_MINP(59,4), SIG_NO_D6 },
 {sig_match_named,           "sddomChangeClockSpeed","SD_ChgClkSpd",     SIG_NAMED_NTH(4,SUB), SIG_DRY_MINP(59,4), SIG_NO_D6 },
-// error messages changed
-{sig_match_str_arg_call,"SD_error_log", "%s(%d) MicroSeconds = 0 NG!\n",SIG_STRCALL_ARG(1)|SIG_STRCALL_JMP_IMM|SIG_SEARCH_ROM|SIG_SEARCH_RAM,SIG_DRY_MAX(55)},
-{sig_match_str_arg_call,"SD_error_log", "%s(%d) MicroSeconds = 0 ERR!\n",SIG_STRCALL_ARG(1)|SIG_STRCALL_JMP_IMM|SIG_SEARCH_ROM|SIG_SEARCH_RAM,SIG_DRY_MIN(56)},
-{sig_match_func_using_str,  "SD_GetSpd",     "GetSpd(%d)",     SIG_USESTR_BACK(11)|SIG_SEARCH_ROM,   SIG_DRY_MAX(52), SIG_OPTIONAL }, // sx280
-{sig_match_func_using_str,  "SD_GetSpd",     "GetSpd(%d)s",    SIG_USESTR_BACK(11)|SIG_SEARCH_ROM,   SIG_DRY_MAX(52), SIG_OPTIONAL }, // other r52
-{sig_match_func_using_str,  "SD_GetSpd",     "GetSpd(%d)s",    SIG_USESTR_BACK(11)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(53) }, // all others, not optional
+// error messages changed NG! to ERR!
+{sig_match_str_arg_call,"SD_error_log", "%s(%d) MicroSeconds = 0 ",SIG_STRCALL_ARG(1)|SIG_STRCALL_JMP_IMM|SIG_SEARCH_ROM|SIG_SEARCH_RAM|SIG_NEAR_SUBSTR},
+{sig_match_func_using_str,  "SD_GetSpd",     "GetSpd(%d)",     SIG_USESTR_BACK(11)|SIG_SEARCH_ROM|SIG_SEARCH_RAM|SIG_NEAR_SUBSTR },
 {sig_match_named,           "SD_get_speed_id","SD_GetSpd",     SIG_NAMED_NTH(3,SUB), SIG_DRY_MAXP(59,3) },
 {sig_match_named,           "SD_get_speed_id","SD_GetSpd",     SIG_NAMED_NTH(3,SUB), SIG_DRY_MINP(59,4), SIG_NO_D7 },
 {sig_match_named,           "SD_get_speed_id","SD_GetSpd",     SIG_NAMED_NTH(4,SUB), SIG_DRY_MINP(59,4), SIG_NO_D6 },
-{sig_match_near_str, "SetSDClkFrequency","%s(%d) SetSDClkFrequency() NG!\n",SIG_NEAR_BEFORE(4,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MAX(55) },
-{sig_match_near_str, "SetSDClkFrequency","%s(%d) SetSDClkFrequency() ERR!\n",SIG_NEAR_BEFORE(6,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(56) },
-{sig_match_near_str, "SD_CMD55_SendAppCommand","%s(%d) CMD41_GetCardPowerUpStatu() NG!\n",SIG_NEAR_AFTER(10,3)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MAX(55) },
-{sig_match_near_str, "SD_CMD55_SendAppCommand","%s(%d) CMD41_GetCardPowerUpStatu() ERR!\n",SIG_NEAR_AFTER(10,3)|SIG_SEARCH_RAM|SIG_SEARCH_ROM, SIG_DRY_MIN(56) },
+{sig_match_near_str, "SetSDClkFrequency","%s(%d) SetSDClkFrequency() ",SIG_NEAR_BEFORE(6,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR },
+{sig_match_near_str, "SD_CMD55_SendAppCommand","%s(%d) CMD41_GetCardPowerUpStatu() ",SIG_NEAR_AFTER(10,3)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR },
 {sig_match_named,    "SD_cmd_setup",        "SD_CMD55_SendAppCommand",  SIG_NAMED_NTH(1,SUB) },
 {sig_match_named,    "SD_cmd_setup_resp48b","SD_CMD55_SendAppCommand",  SIG_NAMED_NTH(2,SUB) },
 {sig_match_named,    "SD_cmd_send",         "SD_CMD55_SendAppCommand",  SIG_NAMED_NTH(3,SUB) },
 {sig_match_named,    "sdconWaitInterrupt",  "SD_CMD55_SendAppCommand",  SIG_NAMED_NTH(4,SUB) },
-{sig_match_func_using_str, "SD_HWInit","HWInit(%d)", SIG_USESTR_BACK(1)|SIG_SEARCH_ROM, SIG_DRY_MAX(52), SIG_OPTIONAL },
-{sig_match_func_using_str, "SD_HWInit","HWInit(%d)s",SIG_USESTR_BACK(1)|SIG_SEARCH_ROM, SIG_DRY_MAX(52), SIG_OPTIONAL },
+{sig_match_func_using_str, "SD_HWInit","HWInit(%d)", SIG_USESTR_BACK(1)|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR, SIG_DRY_MAX(52) },
 {sig_match_func_using_str, "SD_HWInit","HWInit(%d)s",SIG_USESTR_BACK(5)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_FULL_RANGE, SIG_DRY_MIN(53) },
 {sig_match_named,    "EnableSDCONHClk",     "SD_HWInit",  SIG_NAMED_NTH(2,SUB) },
 {sig_match_named,    "EnableSDClk",         "SD_HWInit",  SIG_NAMED_NTH(4,SUB) },
