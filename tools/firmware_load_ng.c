@@ -193,7 +193,7 @@ uint32_t find_next_str_bytes_range(firmware *fw, const char *str, uint32_t adr,u
     return find_next_bytes_range(fw,str,strlen(str)+1,adr,max_adr);
 }
 
-uint32_t find_next_str_bytes_main_fw(firmware *fw, const char *str, uint32_t adr)
+uint32_t find_next_bytes_main_fw(firmware *fw, const void *bytes, size_t len, uint32_t adr)
 {
     // max is end of fw code + 4096, assuming it fits in fw
     // while early code could technically load from base - 1k, unlikely
@@ -203,7 +203,12 @@ uint32_t find_next_str_bytes_main_fw(firmware *fw, const char *str, uint32_t adr
     } else {
         max_adr = fw->base + fw->size8;
     }
-    return find_next_bytes_range(fw,str,strlen(str)+1,adr,max_adr);
+    return find_next_bytes_range(fw,bytes,len,adr,max_adr);
+}
+
+uint32_t find_next_str_bytes_main_fw(firmware *fw, const char *str, uint32_t adr)
+{
+    return find_next_bytes_main_fw(fw,str,strlen(str)+1,adr);
 }
 
 // find a string within range of LDR pc or ADR, starting from main fw
@@ -225,8 +230,8 @@ uint32_t find_str_bytes(firmware *fw, const char *str)
     return find_next_str_bytes(fw,str,fw->base);
 }
 
-// find a string within adr_range containing start adr
-uint32_t find_next_str_bytes_adr_range(firmware *fw, const char *str, uint32_t adr)
+// find a byte sequence within adr_range containing start adr
+uint32_t find_next_bytes_adr_range(firmware *fw, const void *bytes, size_t len, uint32_t adr)
 {
     if(!adr) {
         fprintf(stderr,"find_next_str_bytes_adr_range: null adr\n");
@@ -240,16 +245,16 @@ uint32_t find_next_str_bytes_adr_range(firmware *fw, const char *str, uint32_t a
     // find bytes using ROM address mapping
     uint32_t start_adr = adr2romadr(fw, adr);
     uint32_t max_adr = adr2romadr(fw, rng->start + rng->bytes - 1);
-    uint32_t r = find_next_bytes_range(fw,str,strlen(str)+1,start_adr,max_adr);
+    uint32_t r = find_next_bytes_range(fw,bytes,len,start_adr,max_adr);
     if(r) {
         return romadr2adr(fw,r);
     }
     return r;
 }
 
-// find a string within the specified adr ranges, using ADR_RANGE_M_* defines
+// find a byte sequence within the specified adr ranges, using ADR_RANGE_M_* defines
 // if adr is 0, start with first matching range
-uint32_t find_next_str_bytes_adr_ranges(firmware *fw, const char *str, uint32_t range_match, uint32_t adr)
+uint32_t find_next_bytes_adr_ranges(firmware *fw, const void *bytes, size_t len, uint32_t range_match, uint32_t adr)
 {
     adr_range_t *rng = NULL;
     if(adr) {
@@ -272,14 +277,14 @@ uint32_t find_next_str_bytes_adr_ranges(firmware *fw, const char *str, uint32_t 
         // TODO would be nice to be able to restrict ROM to main_fw
         // searching whole ROM and copied regions doesn't make much sense
         // but if search ram and ROM, probably want ROM last
-        adr = find_next_str_bytes_adr_range(fw,str,adr);
+        adr = find_next_bytes_adr_range(fw,bytes,len,adr);
     } while(!adr);
     return adr;
 }
 
-// find a string in possibly code ranges defined by SEARCH_F_* bits in search_ranges
+// find a byte sequence in possibly code ranges defined by SEARCH_F_* bits in search_ranges
 // if adr is 0, start with first matching range
-uint32_t find_next_str_bytes_code(firmware *fw, const char *str, uint32_t search_ranges, uint32_t adr)
+uint32_t find_next_bytes_code(firmware *fw, const void *bytes, size_t len, uint32_t search_ranges, uint32_t adr)
 {
     // TODO ugly flag remapping
     // ROM handled seperately because we want to do it last, and respect main code region
@@ -293,7 +298,7 @@ uint32_t find_next_str_bytes_code(firmware *fw, const char *str, uint32_t search
     uint32_t str_adr = 0;
     if(range_match) {
         // if adr is in ROM, this will return 0 since not include in range_match
-        str_adr = find_next_str_bytes_adr_ranges(fw, str, range_match, adr);
+        str_adr = find_next_bytes_adr_ranges(fw, bytes, len, range_match, adr);
         if(str_adr) {
             return str_adr;
         }
@@ -304,7 +309,14 @@ uint32_t find_next_str_bytes_code(firmware *fw, const char *str, uint32_t search
     if(!adr) {
         adr = fw->rom_code_search_min_adr;
     }
-    return find_next_str_bytes_main_fw(fw,str,adr);
+    return find_next_bytes_main_fw(fw,bytes,len,adr);
+}
+
+// find a string in possibly code ranges defined by SEARCH_F_* bits in search_ranges
+// if adr is 0, start with first matching range
+uint32_t find_next_str_bytes_code(firmware *fw, const char *str, uint32_t search_ranges, uint32_t adr)
+{
+    return find_next_bytes_code(fw, str, strlen(str)+1, search_ranges, adr);
 }
 
 int isASCIIstring(firmware *fw, uint32_t adr)

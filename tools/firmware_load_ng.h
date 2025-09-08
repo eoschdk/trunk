@@ -218,7 +218,10 @@ int find_bytes_all(firmware *fw, const void *bytes, size_t len, uint32_t adr, ui
 // NOTE only handles ROM addresses
 uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr);
 
-// as above, but ending within range of LDR pc or ADR from main fw code
+// as above, but byte sequence ending within range of LDR pc or ADR from main fw code
+uint32_t find_next_bytes_main_fw(firmware *fw, const void *bytes, size_t len, uint32_t adr);
+
+// as above, but string
 uint32_t find_next_str_bytes_main_fw(firmware *fw, const char *str, uint32_t adr);
 
 // as find_next_str_bytes, but without terminating null
@@ -231,12 +234,16 @@ uint32_t find_str_bytes_main_fw(firmware *fw, const char *str);
 // as find_next_str_bytes, first match
 uint32_t find_str_bytes(firmware *fw, const char *str);
 
-// find a string within adr_range containing start adr
-uint32_t find_next_str_bytes_adr_range(firmware *fw, const char *str, uint32_t adr);
+// find a byte sequence within adr_range containing start adr
+uint32_t find_next_bytes_adr_range(firmware *fw, const void *bytes, size_t len, uint32_t adr);
 
-// find a string within the specified adr ranges, using ADR_RANGE_M_* defines
+// find a byte sequence within the specified adr ranges, using ADR_RANGE_M_* defines
 // if adr is 0, start with first matching range
-uint32_t find_next_str_bytes_adr_ranges(firmware *fw, const char *str, uint32_t range_match, uint32_t adr);
+uint32_t find_next_bytes_adr_ranges(firmware *fw, const void *bytes, size_t len, uint32_t range_match, uint32_t adr);
+
+// find a byte sequence in possibly code ranges defined by SEARCH_F_* bits in search_ranges
+// if adr is 0, start with first matching range
+uint32_t find_next_bytes_code(firmware *fw, const void *bytes, size_t len, uint32_t search_ranges, uint32_t adr);
 
 // find a string in possibly code ranges defined by SEARCH_F_* bits in search_ranges
 // if adr is 0, start with first matching range
