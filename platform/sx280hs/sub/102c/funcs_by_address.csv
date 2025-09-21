@@ -1059,7 +1059,9 @@
 0xfc20ee2b,PT_MFOn
 0xfc20ee5b,PT_MFOff
 0xfc213615,SD_cmd_setup_resp48b
+0xfc21363b,sdcmdDmaRead
 0xfc2142eb,SD_CMD6_SwitchFunction
+0xfc2149e5,SD_CMD18_ReadMultiBlock
 0xfc214f8b,SD_CMD55_SendAppCommand
 0xfc21c241,task_MetaCtg
 0xfc21f499,SD_cmd_setup
@@ -1406,7 +1408,13 @@
 0xfc31f1a5,task_FORMAT_TASK_PROGRESS
 0xfc31f3d3,task_FORMAT_TASK_NAME
 0xfc3242e5,sddomChangeClockSpeed
+0xfc324fd1,sddomCARDDmaRead
+0xfc32504b,sddomCARDDmaWrite
 0xfc3250fb,SD_HWInit
+0xfc325895,sddomCARDChainingRead
+0xfc325923,SD_CrdRd
+0xfc325cdf,sddomCARDChainingWrite
+0xfc325d47,SD_CrdWr
 0xfc325e4b,SD_GetTtlSect
 0xfc326513,SD_ChgClkSpd
 0xfc326547,SD_GetSpd
@@ -2229,6 +2237,7 @@
 0xfc3e3ea7,CancelLoopGainCalc_FW
 0xfc3e3eb1,ReloadISAdjustment_FW
 0xfc3e3ebb,MoveISLensToCentralPosition_FW
+0xfc3ea7d1,SD_setup_dma_read
 0xfc3ec7f1,task_ImgPlyTask
 0xfc3ec8fd,task_ImgPlyLowTask
 0xfc3f3811,task_ImagePlaySysConTask

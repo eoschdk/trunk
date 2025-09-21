@@ -881,6 +881,12 @@
 0xfc237953,GraphicSystemCoreFinish
 0xfc23a8c5,sddomChangeClockSpeed
 0xfc23b16d,SD_HWInit
+0xfc23b9b3,sddomCARDChainingRead
+0xfc23ba2f,sddomCARDDmaRead
+0xfc23bd7f,SD_CrdRd
+0xfc23be8b,sddomCARDChainingWrite
+0xfc23bef5,sddomCARDDmaWrite
+0xfc23bf5d,SD_CrdWr
 0xfc23c071,SD_GetTtlSect
 0xfc23cb83,SD_ChgClkSpd
 0xfc23cbb7,SD_GetSpd
@@ -997,7 +1003,9 @@
 0xfc2e6401,SD_take_sem
 0xfc2e640d,SD_give_sem
 0xfc2e6485,SdcommonMicroWait
+0xfc2ec905,sdcmdDmaRead
 0xfc2ed629,SD_CMD6_SwitchFunction
+0xfc2ee147,SD_CMD18_ReadMultiBlock
 0xfc2ef2d3,SD_CMD55_SendAppCommand
 0xfc2f08c3,SD_cmd_setup_resp48b
 0xfc2f11e3,SD_cmd_setup
@@ -1611,6 +1619,7 @@
 0xfc4ea86f,get_nd_value
 0xfc4eadfd,GetZoomLensCurrentPosition
 0xfc504f47,task_Raw2Ss2YuvTask
+0xfc540131,SD_setup_dma_read
 0xfc54057b,EnableSDClk
 0xfc5405a1,j_DisableSDClk
 0xfc54064f,SetSDClkFrequency

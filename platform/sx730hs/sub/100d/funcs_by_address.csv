@@ -907,7 +907,9 @@
 0xfc2992d9,SoundDevAprocSetPerifSpMute_FW
 0xfc29a12d,task_MetaCtg
 0xfc29ff15,task_BrtCalcTask
+0xfc2a529d,sdcmdDmaRead
 0xfc2a5fa3,SD_CMD6_SwitchFunction
+0xfc2a6abf,SD_CMD18_ReadMultiBlock
 0xfc2a7c4b,SD_CMD55_SendAppCommand
 0xfc2a923b,SD_cmd_setup_resp48b
 0xfc2a9b7d,SD_cmd_setup
@@ -1325,6 +1327,12 @@
 0xfc3ba91f,task_Cave2MainTask
 0xfc3bafe5,sddomChangeClockSpeed
 0xfc3bb88d,SD_HWInit
+0xfc3bc0c5,sddomCARDChainingRead
+0xfc3bc141,sddomCARDDmaRead
+0xfc3bc465,SD_CrdRd
+0xfc3bc571,sddomCARDChainingWrite
+0xfc3bc5db,sddomCARDDmaWrite
+0xfc3bc643,SD_CrdWr
 0xfc3bc757,SD_GetTtlSect
 0xfc3bd259,SD_ChgClkSpd
 0xfc3bd28d,SD_GetSpd
@@ -2660,6 +2668,7 @@
 0xfc589b11,kbd_read_keys
 0xfc589b47,kbd_p1_f
 0xfc589b4f,kbd_p1_f_cont
+0xfc58ab95,SD_setup_dma_read
 0xfc58b003,EnableSDClk
 0xfc58b029,j_DisableSDClk
 0xfc58b0d7,SetSDClkFrequency

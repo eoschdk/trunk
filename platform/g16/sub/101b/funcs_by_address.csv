@@ -1066,7 +1066,9 @@
 0xfc260b15,SD_take_sem
 0xfc260b21,SD_give_sem
 0xfc260b97,SdcommonMicroWait
+0xfc260cd1,sdcmdDmaRead
 0xfc2619e7,SD_CMD6_SwitchFunction
+0xfc2622ff,SD_CMD18_ReadMultiBlock
 0xfc262ffb,SD_CMD55_SendAppCommand
 0xfc264155,SD_cmd_setup_resp48b
 0xfc264733,task_CorctTask
@@ -1524,7 +1526,13 @@
 0xfc37b529,task_FileManMarkAllTask
 0xfc37b6cf,task_SetGeoTagExecution
 0xfc37e57d,sddomChangeClockSpeed
+0xfc37edb5,sddomCARDDmaRead
+0xfc37ee2d,sddomCARDDmaWrite
 0xfc37eee1,SD_HWInit
+0xfc37f9ad,sddomCARDChainingRead
+0xfc37fa29,SD_CrdRd
+0xfc37fb2d,sddomCARDChainingWrite
+0xfc37fb95,SD_CrdWr
 0xfc37fca1,SD_GetTtlSect
 0xfc3807d1,SD_ChgClkSpd
 0xfc380805,SD_GetSpd
@@ -2251,6 +2259,7 @@
 0xfc46f12b,CancelLoopGainCalc_FW
 0xfc46f135,ReloadISAdjustment_FW
 0xfc46f13f,MoveISLensToCentralPosition_FW
+0xfc471f91,SD_setup_dma_read
 0xfc472643,EnableSDClk
 0xfc472669,j_DisableSDClk
 0xfc472717,SetSDClkFrequency
