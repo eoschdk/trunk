@@ -609,6 +609,15 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "SD_get_ctrl_reg", OPTIONAL|UNUSED },
     { "SdcommonMicroWait", OPTIONAL|UNUSED }, // SD api microsecond resolution wait
     { "microwait", OPTIONAL|UNUSED }, // generic microsecond resolution wait
+    { "SD_CrdRd", OPTIONAL|UNUSED },
+    { "SD_CrdWr", OPTIONAL|UNUSED },
+    { "sddomCARDChainingRead", OPTIONAL|UNUSED },
+    { "sddomCARDDmaRead", OPTIONAL|UNUSED },
+    { "sddomCARDChainingWrite", OPTIONAL|UNUSED },
+    { "sddomCARDDmaWrite", OPTIONAL|UNUSED },
+    { "SD_CMD18_ReadMultiBlock", OPTIONAL|UNUSED },
+    { "sdcmdDmaRead", OPTIONAL|UNUSED }, // generic func for command that receives data
+    { "SD_setup_dma_read", OPTIONAL|UNUSED }, // set size, address of receive DMA
 
     {0,0,0},
 };
@@ -6250,6 +6259,24 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,    "SdcommonMicroWait",   "SD_HWInit",    SIG_NAMED_NTH(5,SUB), SIG_DRY_MIN(58), SIG_NO_D6},
 {sig_match_named,    "microwait",           "SdcommonMicroWait",SIG_NAMED_NTH(3,JMP_SUB), SIG_DRY_ANY, SIG_NO_D7},
 {sig_match_named,    "microwait",           "SdcommonMicroWait",SIG_NAMED_NTH(1,JMP_SUB), SIG_DRY_MIN(58), SIG_NO_D6},
+{sig_match_func_using_str,"SD_CrdRd","CrdRd(%d,0x%x,0x%x,0x%x,%d)", SIG_USESTR_BACK(17)|SIG_SEARCH_ROM|SIG_SEARCH_RAM|SIG_NEAR_SUBSTR },
+{sig_match_func_using_str,"SD_CrdWr","CrdWr(%d,0x%x,0x%x,0x%x,%d)", SIG_USESTR_BACK(17)|SIG_SEARCH_ROM|SIG_SEARCH_RAM|SIG_NEAR_SUBSTR },
+{sig_match_near_str, "sddomCARDChainingRead","%s(%d) sddomCARDChainingRead() ", SIG_NEAR_BEFORE(6,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR },
+{sig_match_near_str, "sddomCARDDmaRead","%s(%d) sddomCARDDmaRead() ", SIG_NEAR_BEFORE(6,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR },
+// task ID added in dry52 after sx280
+{sig_match_near_str, "sddomCARDChainingWrite","%s(%d) sddomCARDChainingWrite() ", SIG_NEAR_BEFORE(4,1)|SIG_NEAR_SUBSTR, SIG_DRY_MAX(52), SIG_OPTIONAL },
+{sig_match_near_str, "sddomCARDDmaWrite","%s(%d) sddomCARDDmaWrite() ", SIG_NEAR_BEFORE(4,1)|SIG_NEAR_SUBSTR, SIG_DRY_MAX(52), SIG_OPTIONAL },
+{sig_match_near_str, "sddomCARDChainingWrite","%s(%d)[TaskID = %d] sddomCARDChainingWrite() ", SIG_NEAR_BEFORE(4,1)|SIG_NEAR_SUBSTR, SIG_DRY_MAX(52), SIG_OPTIONAL },
+{sig_match_near_str, "sddomCARDDmaWrite","%s(%d)[TaskID = %d] sddomCARDDmaWrite() ", SIG_NEAR_BEFORE(4,1)|SIG_NEAR_SUBSTR, SIG_DRY_MAX(52), SIG_OPTIONAL },
+{sig_match_near_str, "sddomCARDChainingWrite","%s(%d)[TaskID = %d] sddomCARDChainingWrite() ", SIG_NEAR_BEFORE(6,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR, SIG_DRY_MIN(53) },
+{sig_match_near_str, "sddomCARDDmaWrite","%s(%d)[TaskID = %d] sddomCARDDmaWrite() ", SIG_NEAR_BEFORE(6,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR, SIG_DRY_MIN(53) },
+// d7 compiler puts call far from ref
+{sig_match_near_str, "SD_CMD18_ReadMultiBlock","%s(%d) CMD18_ReadMultiBlock() ", SIG_NEAR_BEFORE(3,1)|SIG_SEARCH_RAM|SIG_SEARCH_ROM|SIG_NEAR_SUBSTR, SIG_DRY_ANY, SIG_NO_D7 },
+{sig_match_named, "SD_CMD18_ReadMultiBlock","sddomCARDDmaRead", SIG_NAMED_NTH(1,SUB), SIG_DRY_ANY, SIG_NO_D6 },
+{sig_match_named, "sdcmdDmaRead","SD_CMD18_ReadMultiBlock", SIG_NAMED_NTH(1,SUB) },
+// d7 inlines one call
+{sig_match_named, "SD_setup_dma_read","sdcmdDmaRead", SIG_NAMED_NTH(3,SUB), SIG_DRY_ANY, SIG_NO_D7 },
+{sig_match_named, "SD_setup_dma_read","sdcmdDmaRead", SIG_NAMED_NTH(2,SUB), SIG_DRY_ANY, SIG_NO_D6 },
 
 {NULL},
 };

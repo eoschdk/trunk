@@ -619,5 +619,19 @@ __stdcall unsigned SD_get_ctrl_reg(unsigned sd_id,unsigned offset);
 // usec seems to be an int since microwait checks for negative
 __stdcall void SdcommonMicroWait(unsigned sd_id,int usec);
 __stdcall int microwait(int usec);
+// unk is 0 from ReadSDCard, 1 from other caller used in InitFileModules
+// next 2 return 1 on success
+__stdcall int SD_CrdRd(unsigned sd_id, void *buf, unsigned start_sect, unsigned num_sect, int unk);
+__stdcall int SD_CrdWr(unsigned sd_id, void *buf, unsigned start_sect, unsigned num_sect, int unk);
+// start_addr is from sddomGetStartCardAddress, modifying start_sect
+// next 4 return 0 on success
+__stdcall int sddomCARDChainingRead(unsigned sd_id, void *buf, unsigned start_addr, unsigned num_sect, int unk);
+__stdcall int sddomCARDDmaRead(unsigned sd_id, void *buf, unsigned start_addr, unsigned num_sect, int unk);
+__stdcall int sddomCARDChainingWrite(unsigned sd_id, void *buf, unsigned start_addr, unsigned num_sect, int unk);
+__stdcall int sddomCARDDmaWrite(unsigned sd_id, void *buf, unsigned start_addr, unsigned num_sect, int unk);
+// next 2 return 1 on success
+__stdcall int SD_CMD18_ReadMultiBlock(unsigned sd_id, unsigned start_addr, unsigned num_sect, void *buf);
+__stdcall int sdcmdDmaRead(unsigned sd_id, unsigned cmd, unsigned param, unsigned num_block, void *buf);
+__stdcall void SD_setup_dma_read(unsigned sd_id, void *buf, unsigned nbytes);
 
 #endif // FW_FUNCTIONS_H
