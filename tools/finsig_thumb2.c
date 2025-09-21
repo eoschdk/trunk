@@ -5209,7 +5209,9 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         str_adr = find_next_bytes_code(fw, rule->ref_name, slen, search_flags, 0); // direct string must be near actual code
     }
     if(!str_adr) {
-        printf("find_call_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        if(!(rule->flags & SIG_OPTIONAL)) {
+            printf("find_call_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        }
         return 0;
     }
     uint32_t search_adr = str_adr;
@@ -5220,7 +5222,9 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // TODO should honor search ranges
         search_adr=find_u32_adr_range(fw,str_adr,fw->rom_code_search_min_adr,fw->rom_code_search_max_adr);
         if(!search_adr) {
-            printf("find_call_near_str: %s failed to find indirect ref %s\n",rule->name,rule->ref_name);
+            if(!(rule->flags & SIG_OPTIONAL)) {
+                printf("find_call_near_str: %s failed to find indirect ref %s\n",rule->name,rule->ref_name);
+            }
             return 0;
         }
         // printf("find_call_near_str: %s indirect 0x%08x\n",rule->name,search_adr);
@@ -5300,7 +5304,9 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         disasm_iter_init(fw, is, ref_adr);
         disasm_iter(fw, is);
     }
-    printf("find_call_near_str: no match %s\n",rule->name);
+    if(!(rule->flags & SIG_OPTIONAL)) {
+        printf("find_call_near_str: no match %s\n",rule->name);
+    }
     return 0;
 }
 
