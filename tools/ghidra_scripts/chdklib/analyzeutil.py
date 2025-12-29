@@ -111,24 +111,24 @@ class InsnDescriber:
     # note contrary to ARM UAL, ghidra puts S after condition like andeqs
     match_mne_dataproc = re.compile(
         r"(addw|add|adc|mla|mls|mul|rsb|subw|sub|sbc|sdiv|udiv"
-        "|and|asr|bic|bfc|bfi|clz|eor|lsl|lsr|orn|orr|ror|rrx|rsc|sxtb|sxth|ubfx|uxth)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
+        r"|and|asr|bic|bfc|bfi|clz|eor|lsl|lsr|orn|orr|ror|rrx|rsc|sxtb|sxth|ubfx|uxth)"
+        r"(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
     )
     match_mne_mov = re.compile(
         r"(adr|movt|movw|mov|cpy|mvn)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
+        r"(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
     )
     match_mne_cmp = re.compile(
         r"(cmn|cmp|teq|tst)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
+        r"(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_b = re.compile(
         r"(bx|blx|bl|b)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
+        r"(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_cond_misc = re.compile(
         r"(mrs|msr)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?$"
+        r"(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?$"
     )
     match_mne_ldst = re.compile(
         r"(ldr|str)(sb|b|sh|h|d)?(t)?(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
