@@ -569,7 +569,7 @@ def process_list(stubs_data):
         # TODO prefer stubs_entry source?
         if cval['type'] == 'func':
             for name in cval['names']:
-                if not re.search('^handle_PTP_OC_0x|^handle_PTP_OC_CANON|_FW(_stubs_[0-9a-fA-F]{8})?$|^hook_CreateTask$',name):
+                if not re.search(r'^handle_PTP_OC_0x|^handle_PTP_OC_CANON|_FW(_stubs_[0-9a-fA-F]{8})?$|^hook_CreateTask$',name):
                     cval['pri_name'] = name
 
         # unique alt names
@@ -585,12 +585,12 @@ def process_list(stubs_data):
             cval['make_func'] = 1 # default for function (code) stubs, guess based on refs and code
             for name in cval['names']:
                 # kbd_p1_f_cont, and hopefully if we do similar things
-                if re.search('_cont$',name):
+                if re.search(r'_cont$',name):
                     cval['make_func'] = 0
                     break
 
                 # don't bother with known veneers
-                if re.search('^j_',name):
+                if re.search(r'^j_',name):
                     cval['make_func'] = 0
                     break
 
@@ -598,7 +598,7 @@ def process_list(stubs_data):
                 # should mostly be well formed functions
                 # |_FW(_stubs_[0-9a-fA-F]{8})? not included because many event procs
                 # are wrappers that use a b instead of bl
-                if re.search('^task_|^handle_PTP_OC_|^exception_handler_',name):
+                if re.search(r'^task_|^handle_PTP_OC_|^exception_handler_',name):
                     cval['make_func'] = 2
                     break
 

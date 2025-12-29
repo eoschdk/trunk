@@ -1,5 +1,5 @@
 # module to load simple defines from C header files
-# 
+#
 # License: GPL
 #
 # Copyright 2020 reyalp (at) gmail.com
@@ -47,7 +47,7 @@ class DefinesData:
 
     def process_line(self,line):
         # trim any trailing CR or LF for simplicity
-        line = re.sub('\r?\n?$','',line)
+        line = re.sub(r'\r?\n?$','',line)
         # if line ends with backslash, trim it and store
         if line[-1:] == '\\':
             self.partial_line = self.partial_line + line[:-1]
@@ -59,23 +59,23 @@ class DefinesData:
         # in a multiline comment?
         if self.in_comment:
             # check for end, trim it
-            if re.match('[*]/',line):
-                line = re.sub('.*?[*]/',' ',line)
+            if re.match(r'[*]/',line):
+                line = re.sub(r'.*?[*]/',' ',line)
                 self.in_comment = False
             else:
                 # not closed yet
                 return
 
-        line = re.sub('/[*].*?[*]/',' ',line)
+        line = re.sub(r'/[*].*?[*]/',' ',line)
 
         # note comment code doesn't respect quotes!!
         # remove complete C style comments
-        line = re.sub('/[*].*?[*]/',' ',line)
+        line = re.sub(r'/[*].*?[*]/',' ',line)
         # remove C++ style comments (could be inside a C style comment, don't care)
-        line = re.sub('//.*','',line)
+        line = re.sub(r'//.*','',line)
         # unclosed C style comment, trim it
-        if re.match('/[*]',line):
-            line = re.sub('/[*].*','',line)
+        if re.match(r'/[*]',line):
+            line = re.sub(r'/[*].*','',line)
             self.in_comment = True
 
         # empty line
@@ -83,7 +83,7 @@ class DefinesData:
             return
 
         # simple define or undef
-        m = re.match('\s*#(define|undef)\s+([^\s]+)\s*$',line)
+        m = re.match(r'\s*#(define|undef)\s+([^\s]+)\s*$',line)
         if m:
             if m.group(1) == 'define':
                 self.data[m.group(2)] = ''
@@ -92,7 +92,7 @@ class DefinesData:
             return
 
         # define foo bar
-        m = re.match('\s*#define\s+([^\s]+)\s+([^\s].*?)\s*$',line)
+        m = re.match(r'\s*#define\s+([^\s]+)\s+([^\s].*?)\s*$',line)
         if m:
             self.data[m.group(1)] = m.group(2)
 
@@ -106,18 +106,18 @@ class DefinesData:
         # undef'd == default?
         if v is None:
             return default
-        if re.match('([+]-)?0x[0-9a-f]+$',v,re.I):
+        if re.match(r'([+]-)?0x[0-9a-f]+$',v,re.I):
             return int(v,16)
-        if re.match('([+]-)?0[0-7]+$',v):
+        if re.match(r'([+]-)?0[0-7]+$',v):
             return int(v,8)
-        if re.match('([+]-)?[0-9]+$',v):
+        if re.match(r'([+]-)?[0-9]+$',v):
             return int(v,10)
         return default
 
     def show(self):
         for name in self.data:
             self.infomsg(-1,'%s=[%s]\n'%(name,self.get(name)))
-            
+
     def showInts(self):
         for name in self.data:
             v = self.getInt(name)
@@ -180,7 +180,7 @@ class PropsetData:
         if bn == 'platform_camera.h':
             self.load_platform_propset(filename)
         else:
-            m = re.match('propset([1-9][0-9]*).h',bn)
+            m = re.match(r'propset([1-9][0-9]*).h',bn)
             if m:
                 self.propset = int(m.group(1))
                 self.load_propset(filename)

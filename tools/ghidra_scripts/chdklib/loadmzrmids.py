@@ -1,6 +1,6 @@
 # License: GPL
 #
-# Copyright 2021 reyalp (at) gmail.com
+# Copyright 2021-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -46,14 +46,14 @@ class MzrmMsgList:
         self.by_id = {}
         mid = 0
         for line in open(fname):
-            line = re.sub('\r?\n?$','',line)
+            line = re.sub(r'\r?\n?$','',line)
             if mid == 0:
-                if re.match('^ID\s',line):
+                if re.match(r'^ID\s',line):
                     continue
-                elif not re.match('^(sub|[\d]{3})',line):
+                elif not re.match(r'^(sub|[\d]{3})',line):
                     raise ValueError('unexpected file format')
 
-            m = re.match('^(sub_[A-Fa-f0-9]{8}|[\d]{3}):\s+(.*)',line)
+            m = re.match(r'^(sub_[A-Fa-f0-9]{8}|[\d]{3}):\s+(.*)',line)
 
             name = m.group(2)
 

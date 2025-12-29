@@ -51,12 +51,12 @@ def list_mzrm_create_calls():
     mzrm_ids = []
     do_all = False
 
-    for s in re.split('[ ,]+',instr):
+    for s in re.split(r'[ ,]+',instr):
         if s == '*':
             do_all = True
-        elif re.match('0x[0-9a-f]+$',s,re.I):
+        elif re.match(r'0x[0-9a-f]+$',s,re.I):
             mzrm_ids.append(int(s,16))
-        elif re.match('[0-9]+$',s):
+        elif re.match(r'[0-9]+$',s):
             mzrm_ids.append(int(s,10))
         else:
             mzrm_msg = mzrmlist.by_name.get(s)

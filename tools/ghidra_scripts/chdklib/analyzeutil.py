@@ -110,37 +110,37 @@ class InsnDescriber:
     # not comprehensive, not all captures a valid for all instructions
     # note contrary to ARM UAL, ghidra puts S after condition like andeqs
     match_mne_dataproc = re.compile(
-        "(addw|add|adc|mla|mls|mul|rsb|subw|sub|sbc|sdiv|udiv"
+        r"(addw|add|adc|mla|mls|mul|rsb|subw|sub|sbc|sdiv|udiv"
         "|and|asr|bic|bfc|bfi|clz|eor|lsl|lsr|orn|orr|ror|rrx|rsc|sxtb|sxth|ubfx|uxth)"
         "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
     )
     match_mne_mov = re.compile(
-        "(adr|movt|movw|mov|cpy|mvn)"
+        r"(adr|movt|movw|mov|cpy|mvn)"
         "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
     )
     match_mne_cmp = re.compile(
-        "(cmn|cmp|teq|tst)"
+        r"(cmn|cmp|teq|tst)"
         "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_b = re.compile(
-        "(bx|blx|bl|b)"
+        r"(bx|blx|bl|b)"
         "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_cond_misc = re.compile(
-        "(mrs|msr)"
+        r"(mrs|msr)"
         "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?$"
     )
     match_mne_ldst = re.compile(
-        "(ldr|str)(sb|b|sh|h|d)?(t)?(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
+        r"(ldr|str)(sb|b|sh|h|d)?(t)?(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_pushpop = re.compile(
-        "(push|pop)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
+        r"(push|pop)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_ldmstm = re.compile(
-        "(ldm|stm)(db|ia|fd|da|fa|ea|ed)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
+        r"(ldm|stm)(db|ia|fd|da|fa|ea|ed)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_nosfx_misc = re.compile(
-        "(cbz|cbnz)$"
+        r"(cbz|cbnz)$"
     )
 
     likely_before_push_mne_base={
@@ -160,14 +160,14 @@ class InsnDescriber:
 
     # match regs allowed to be freely modified in a function
     #match_no_preserve_regs = re.compile(
-    #    "(?:^|[^a-z])(?:r[0-3]|r12)(?:[^a-z]|$)"
+    #    r"(?:^|[^a-z])(?:r[0-3]|r12)(?:[^a-z]|$)"
     #)
 
     # match regs not allowed to be freely modified in a function
     # sp, pc is questionable, but probably want to handle explicitly
     # r12 not included
     match_preserve_regs = re.compile(
-        "(?:^|[^a-z])(?:r[4-9]|r1[01]|sp|lr|pc)(?:[^a-z]|$)"
+        r"(?:^|[^a-z])(?:r[4-9]|r1[01]|sp|lr|pc)(?:[^a-z]|$)"
     )
 
     def __init__(self,insn, tmode):

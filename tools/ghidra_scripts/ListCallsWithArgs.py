@@ -63,16 +63,16 @@ def list_calls_main():
     regs={}
     msg = []
     match_arg_count = 0
-    for s in re.split('[ ,]+',argstr):
+    for s in re.split(r'[ ,]+',argstr):
         if n > 3:
             warn('too many arguments, exiting'%(addr))
             return
 
         if s == '-':
             match_val = None
-        elif re.match('0x[0-9a-f]+$',s,re.I):
+        elif re.match(r'0x[0-9a-f]+$',s,re.I):
             match_val = int(s,16)
-        elif re.match('[0-9]+$',s):
+        elif re.match(r'[0-9]+$',s):
             match_val = int(s,10)
         else:
             warn('did not understand %s, exiting'%(s))

@@ -40,7 +40,7 @@ g_options = {
 }
 
 def check_thumb_data_conflict(b):
-    m = re.match('Failed to disassemble at ([0-9a-fA-F]{8}) due to conflicting data at ([0-9a-fA-F]{8})',b.getComment())
+    m = re.match(r'Failed to disassemble at ([0-9a-fA-F]{8}) due to conflicting data at ([0-9a-fA-F]{8})',b.getComment())
     # Not this kind of bookmark
     if not m:
         return False
@@ -91,7 +91,7 @@ def check_arm_without_caller(b):
     # is there a function associated with this address?
     fn = getFunctionContaining(b_addr)
     if not fn:
-        m = re.match('Unable to resolve constructor at ([0-9A-Fa-f]{8}) \(flow from ([0-9A-Fa-f]{8})\)',b.getComment())
+        m = re.match(r'Unable to resolve constructor at ([0-9A-Fa-f]{8}) \(flow from ([0-9A-Fa-f]{8})\)',b.getComment())
         if not m:
             infomsg(4,"arm_without_caller no fun %s\n"%(b.getAddress()))
             return False
@@ -137,7 +137,7 @@ def check_other_data_conflict(b):
     if b.getCategory() != 'Bad Instruction':
         return False
 
-    m = re.match('Failed to disassemble at ([0-9A-Fa-f]{8}) due to conflicting data(?: at ([0-9A-Fa-f]{8}))? \(flow from ([0-9A-Fa-f]{8})\)',b.getComment())
+    m = re.match(r'Failed to disassemble at ([0-9A-Fa-f]{8}) due to conflicting data(?: at ([0-9A-Fa-f]{8}))? \(flow from ([0-9A-Fa-f]{8})\)',b.getComment())
     # Not this kind of bookmark
     if not m:
         return False

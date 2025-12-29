@@ -2,7 +2,7 @@
 
 # License: GPL
 #
-# Copyright 2019-2020 reyalp (at) gmail.com
+# Copyright 2019-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@ class StubsFileParser:
     """Class for parsing CHDK stubs_*.S files"""
     # no current files should use regular NSTUB
     # don't currently use DEF_CONST
-    stub_re = re.compile('\s*(DEF|NHSTUB|NSTUB|DEF_CONST|NHSTUB2)\s*\(\s*([A-Za-z_0-9]+)\s*,\s*([0\dXx0-9A-Fa-f]+)(\s*\+\s*[0\dXx0-9A-Fa-f]+)?\)\s*(?://\s*([^\s].*))?$')
+    stub_re = re.compile(r'\s*(DEF|NHSTUB|NSTUB|DEF_CONST|NHSTUB2)\s*\(\s*([A-Za-z_0-9]+)\s*,\s*([0\dXx0-9A-Fa-f]+)(\s*\+\s*[0\dXx0-9A-Fa-f]+)?\)\s*(?://\s*([^\s].*))?$')
 
     comment_section_ids = {
         'Camera info:':'CAM_INFO',
@@ -43,7 +43,7 @@ class StubsFileParser:
         self.src_name = os.path.basename(self.fname)
 
         # if not specified, default to on for stubs_entry
-        if process_comments == None and re.match('stubs_entry\.[sS](\.err)?',self.src_name):
+        if process_comments == None and re.match(r'stubs_entry\.[sS](\.err)?',self.src_name):
             process_comments = True
 
         self.stubs_data = stubs_data
@@ -66,13 +66,13 @@ class StubsFileParser:
 
 
     def process_cam_info(self,body):
-        m = re.match('Main firmware start: 0x([0-9A-Fa-f]{8})$',body)
+        m = re.match(r'Main firmware start: 0x([0-9A-Fa-f]{8})$',body)
         if m:
             self.comment_data['main_fw_start'] = int(m.group(1),16)
             self.stubs_data.infomsg(0,"found main_fw_start %x\n"%(self.comment_data['main_fw_start']))
             return
 
-        m = re.match('DRYOS R([0-9]+) (\([^)]+\))(?: @ 0x([0-9A-Fa-f]{8}) ref @ 0x([0-9A-Fa-f]{8}))?',body)
+        m = re.match(r'DRYOS R([0-9]+) (\([^)]+\))(?: @ 0x([0-9A-Fa-f]{8}) ref @ 0x([0-9A-Fa-f]{8}))?',body)
         if m:
             if m.group(3):
                 verstr_adr = int(m.group(3),16)
@@ -93,7 +93,7 @@ class StubsFileParser:
             }
             return
 
-        m = re.match('Firmware Ver(?:sion)? ([^ ]+)\s+// Found @ 0x([0-9A-Fa-f]{8}), "[^ ]+" @ 0x([0-9A-Fa-f]{8})',body)
+        m = re.match(r'Firmware Ver(?:sion)? ([^ ]+)\s+// Found @ 0x([0-9A-Fa-f]{8}), "[^ ]+" @ 0x([0-9A-Fa-f]{8})',body)
         if m:
             self.comment_data['fw_ver_info'] = {
                 'verstr':m.group(1), # actual version, like GM1.00A string (few early cams don't have GM)
@@ -104,7 +104,7 @@ class StubsFileParser:
         # everything else in section is ignored for now
 
     def process_makefile_val(self,body):
-        m = re.match('([^\s]+)\s*=\s*([^\s#]+)(?:#)?(?:\s+(.*))?',body)
+        m = re.match(r'([^\s]+)\s*=\s*([^\s#]+)(?:#)?(?:\s+(.*))?',body)
         # should all be formated like makefile lines
         if not m:
             self.section=None
@@ -120,7 +120,7 @@ class StubsFileParser:
         self.stubs_data.infomsg(0,"found makefile_val %s = %s\n"%(m.group(1),m.group(2)))
 
     def process_adr_range(self,body,key):
-        m = re.match('([A-Z0-9a-z_ ]+?[A-Z0-9a-z_]+)\s+0x([0-9A-Fa-f]{8}) - 0x([0-9A-Fa-f]{8})(?: copied from 0x([0-9A-Fa-f]{8}))?(?: \(\s*([0-9]+)\s+bytes\))',body)
+        m = re.match(r'([A-Z0-9a-z_ ]+?[A-Z0-9a-z_]+)\s+0x([0-9A-Fa-f]{8}) - 0x([0-9A-Fa-f]{8})(?: copied from 0x([0-9A-Fa-f]{8}))?(?: \(\s*([0-9]+)\s+bytes\))',body)
         # should all be formated as adr ranges
         if not m:
             self.section=None
@@ -155,7 +155,7 @@ class StubsFileParser:
         self.stubs_data.infomsg(0,'\n')
 
     def process_misc(self,body):
-        m = re.match('(physw_event_table|canon_mode_list)\s+0x([0-9A-Fa-f]{8})\s+(Found @0x[0-9A-Fa-f]{8})?',body)
+        m = re.match(r'(physw_event_table|canon_mode_list)\s+0x([0-9A-Fa-f]{8})\s+(Found @0x[0-9A-Fa-f]{8})?',body)
         if m:
             self.comment_data['misc_vals'].append({
                 'name':m.group(1),
@@ -166,7 +166,7 @@ class StubsFileParser:
             self.stubs_data.infomsg(0,"found %s %s %s\n"%(m.group(1),m.group(2),m.group(3)))
             return
 
-        m = re.match('Firmware modemap table found @([0-9A-Fa-f]{8}) -> ([0-9A-Fa-f]{8})',body)
+        m = re.match(r'Firmware modemap table found @([0-9A-Fa-f]{8}) -> ([0-9A-Fa-f]{8})',body)
         if m:
             self.stubs_data.infomsg(0,"found modemap %s\n"%(m.group(2)))
             self.comment_data['misc_vals'].append({
@@ -177,17 +177,17 @@ class StubsFileParser:
             })
 
     def process_camera_h_val(self,body):
-        m = re.match('#define\s+([^\s]+)\s+([^\s]+)(?:\s+// ([^\s].*))?',body)
+        m = re.match(r'#define\s+([^\s]+)\s+([^\s]+)(?:\s+// ([^\s].*))?',body)
         if not m:
             # ignore undefs, also special case for iris
             # anything else ends section
-            if not re.match('#undef|Camera has an iris',body):
+            if not re.match(r'#undef|Camera has an iris',body):
                 self.section=None
             return
 
-        #if re.match('0x[0-9A-Fa-f]+$',m.group(2)):
+        #if re.match(r'0x[0-9A-Fa-f]+$',m.group(2)):
         #    val = int(m.group(2),16)
-        #elif re.match('[0-9]+$',m.group(2)):
+        #elif re.match(r'[0-9]+$',m.group(2)):
         #    val = int(m.group(2),10)
         #else:
         #    val = m.group(2)
@@ -208,7 +208,7 @@ class StubsFileParser:
         if not self.gen_header_seen:
             return
 
-        body = re.sub('^//\s*','',line)
+        body = re.sub(r'^//\s*','',line)
         # found a section, no additional data on this line
         if body in self.comment_section_ids:
             self.section = self.comment_section_ids[body]
@@ -240,11 +240,11 @@ class StubsFileParser:
         comment = m.group(5)
         # don't bother including sigfinder number codes
         # TODO maybe filter out in process_list instead
-        if comment and re.match('^[0-9\s%]+$',comment):
+        if comment and re.match(r'^[0-9\s%]+$',comment):
             comment = None
         adr = int(adr_str,0)
         if adradj_str:
-            adradj_str = re.sub('\+\s*','',adradj_str)
+            adradj_str = re.sub(r'\+\s*','',adradj_str)
             adradj = int(adradj_str,0)
         else:
             adradj = 0
@@ -275,7 +275,7 @@ class StubsFileParser:
 
     def process_line(self,line):
         # trim any trailing CR or LF for simplicity
-        line = re.sub('\r?\n?$','',line)
+        line = re.sub(r'\r?\n?$','',line)
 
         # check for header generated header that ids stubs_entry.S, must be on first line
         if self.process_comments and self.gen_header_seen == None:
@@ -287,7 +287,7 @@ class StubsFileParser:
             return
 
         # comment
-        if re.match('\s*//',line):
+        if re.match(r'\s*//',line):
             self.process_comment(line)
             return
 
