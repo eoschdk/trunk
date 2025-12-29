@@ -7,10 +7,11 @@
 #@category CHDK
 #@author reyalp
 #@menupath Tools.CHDK.List Calls with Args
+#@runtime Jython
 
 # License: GPL
 #
-# Copyright 2021 reyalp (at) gmail.com
+# Copyright 2021-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

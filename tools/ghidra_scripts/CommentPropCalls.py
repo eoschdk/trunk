@@ -7,6 +7,7 @@
 #@category CHDK
 #@author reyalp
 #@menupath Tools.CHDK.Comment Prop Calls
+#@runtime Jython
 
 # License: GPL
 #

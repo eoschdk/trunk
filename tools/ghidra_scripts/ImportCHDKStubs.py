@@ -1,5 +1,5 @@
 # Ghidra python script to import function and variable definitions from CHDK "stubs" files
-# 
+#
 # Variables and functions copied to out of ROM require that you have created a memory map with the appropriate
 # address space defined. The InitCHDKMemMap.py script may be used to create an initial memory map.
 #
@@ -20,10 +20,10 @@
 # Additional behavior can be controlled by an ini format configuration file, which is created automatically in
 # the same directory as the script if not present. The default cfg includes a description of each option, and
 # can be created by starting the script and cancelling any of the dialogs.
-# 
+#
 # By default, if multiple different names refer to the same address, the script creates multiple labels. This is
 # convenient since you can jump to any of them, and see in the listing when multiple names refer to the same
-# function. 
+# function.
 # The create_dupe_names option controls this.
 #
 # There are also options to handle conflicts where one name refers to multiple addresses, both in the stubs files
@@ -42,13 +42,13 @@
 # program as pre-comments. Any existing comment of the same type will be overwritten. This can be controlled with the
 # stubs_comments and stubs_comments_type options
 #
-# The script also tries to fix up an issues where auto-analysis creates data that interferes with disassembly. 
+# The script also tries to fix up an issues where auto-analysis creates data that interferes with disassembly.
 # This can happens when it detects bytes that look like an string overlapping the function start, or in thumb2
 # firmware, where pointers with the thumb bit set are interpreted as data pointers.
 # These are controlled by the clean_func_conflict_data and clean_thumb_data options, respectively.
 #
 # By default, the script tries to add labels at the start of ROM and ROMSTARTER entry points, to aid
-# disassembly. 
+# disassembly.
 # The add_boot_entries option controls this.
 #
 # By default, when disassembly is enabled, the script tries to define functions in Ghidra for stubs which are
@@ -60,10 +60,11 @@
 #@category CHDK
 #@author reyalp
 #@menupath Tools.CHDK.Import Stubs
+#@runtime Jython
 
 # License: GPL
 #
-# Copyright 2019-2020 reyalp (at) gmail.com
+# Copyright 2019-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -82,7 +83,7 @@
 import os
 import csv
 import re
-from java.math import BigInteger 
+from java.math import BigInteger
 import ghidra.program.model.symbol as ProgramSymbol
 import ghidra.program.model.symbol.SymbolType as SymbolType
 import ghidra.program.model.symbol.SourceType as SourceType
@@ -407,7 +408,7 @@ def do_create_func(cval):
 
     addr = cval['gh_adr']
     sym = getSymbolAt(addr)
-    if sym and sym.getSymbolType() == SymbolType.FUNCTION: 
+    if sym and sym.getSymbolType() == SymbolType.FUNCTION:
         # infomsg(0,'already a function %s %s\n'%(cval['pri_name'],addr));
         return True
 
@@ -489,7 +490,7 @@ def do_create_stubs(items,stype):
     infomsg(0,"Processing %d %s\n"%(len(items),desc))
     for cval in items:
         monitor.checkCanceled()
-        monitor.setMessage(str(cval['gh_adr'])+ ' ' + cval['pri_name']) 
+        monitor.setMessage(str(cval['gh_adr'])+ ' ' + cval['pri_name'])
         create_cval_symbols(cval)
         if stype == 'func':
             process_func_cval(cval)
@@ -667,7 +668,7 @@ def add_boot_entries(stubs_data):
             if p1 > rom_start and p1 - rom_start < 0x6000:
                 stubs_data.add_stubs_value('func','ImportCHDKStubs','-','romstarter_entry',p1,'',0)
         # digic 7 appears to have an ARM code
-        elif smisc['digic'] == 70: 
+        elif smisc['digic'] == 70:
             stubs_data.add_stubs_value('func','ImportCHDKStubs','-','romstarter_entry',rom_start,'',0)
     else:
         if not rom_start:

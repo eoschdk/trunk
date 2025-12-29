@@ -6,6 +6,7 @@
 #@category CHDK
 #@author reyalp
 #@menupath Tools.CHDK.Comment Levent Calls
+#@runtime Jython
 
 # License: GPL
 #

@@ -3,10 +3,11 @@
 #@category CHDK
 #@author reyalp
 #@menupath Tools.CHDK.Function bookmark cleanup
+#@runtime Jython
 
 # License: GPL
 #
-# Copyright 2020 reyalp (at) gmail.com
+# Copyright 2020-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
