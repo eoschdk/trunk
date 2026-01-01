@@ -1,0 +1,12 @@
+on:
+  workflow_dispatch:
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: checkout trunk
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
