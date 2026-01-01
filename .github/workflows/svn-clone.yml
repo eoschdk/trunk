@@ -34,9 +34,18 @@ jobs:
           SVN_PASSWORD: guest
         run: |
           echo "$SVN_PASSWORD" | \
-          git svn clone -s https://subversion.assembla.com/svn/chdk \
+          git svn clone \
+            --trunk=trunk \
+            --branches=branches \
+            --tags=tags \
+            --prefix=svn/ \
             --username "$SVN_USERNAME" \
+            https://subversion.assembla.com/svn/chdk \
             svn-mirror
+
+          cd svn-mirror
+          git checkout -b trunk remotes/svn/trunk
+          git branch -D master
       - name: restore workflow files to trunk
         run: |
           mkdir -p svn-mirror/.github/workflows/
