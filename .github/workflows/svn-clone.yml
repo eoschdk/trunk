@@ -10,14 +10,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: checkout trunk
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: install prerequisites
         run: |
           apt-get update
           apt-get install --allow-downgrades -y git git-svn subversion
+      - name: checkout trunk
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: configure svn credential storage
         run: |
           mkdir -p ~/.subversion
