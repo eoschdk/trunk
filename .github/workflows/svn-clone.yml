@@ -45,26 +45,52 @@ jobs:
             https://subversion.assembla.com/svn/chdk \
             svn-mirror
 
+          svn_revision() {
+            git log -1 --pretty=%B "${1:-HEAD}" \
+            | sed -n 's/^.*git-svn-id:[^@]*@\([0-9]\+\).*/\1/p'
+          }
+
+          GITHUB_REV=$(svn_revision)
+
           cd svn-mirror
           git checkout -b trunk remotes/svn/trunk
           git branch -D master
-      - name: restore workflow files to trunk
-        run: |
-          mkdir -p svn-mirror/.github/workflows/
-          cp .github/workflows/svn-clone.yml svn-mirror/.github/workflows/svn-clone.yml
 
-          cd svn-mirror
-          git add .github/workflows/svn-clone.yml
-          git commit \
-            -m "restore workflow" \
-            -m "Co-authored-by: Mahied Maruf <contact@mechite.com>" \
-            -m "Co-authored-by: Enzo van der Tuin <55853439+JegoxMC@users.noreply.github.com>" \
-            -m "Signed-off-by: chdk-aggregate <chdk-aggregate[bot]@users.noreply.github.com>"
+          ASSEMBLA_REV=$(svn_revision)
+
+          git log --reverse --pretty=%H |
+          while read c; do
+            [ "$(svn_revision "$c")" -gt "$GITHUB_REV" ] \
+            2>/dev/null &&
+            git format-patch -1 "$c" -o /tmp
+          done
+
+          cd ..
+          git am /tmp/patch-*.patch
+      # - name: restore workflow files to trunk
+      #   run: |
+      #     mkdir -p svn-mirror/.github/workflows/
+      #     cp .github/workflows/svn-clone.yml svn-mirror/.github/workflows/svn-clone.yml
+
+      #     cd svn-mirror
+      #     git add .github/workflows/svn-clone.yml
+      #     git commit \
+      #       -m "restore workflow" \
+      #       -m "Co-authored-by: Mahied Maruf <contact@mechite.com>" \
+      #       -m "Co-authored-by: Enzo van der Tuin <55853439+JegoxMC@users.noreply.github.com>" \
+      #       -m "Signed-off-by: chdk-aggregate <chdk-aggregate[bot]@users.noreply.github.com>"
       - name: push canonical mirror to GitHub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd svn-mirror
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
-          git push origin --all --force
-          git push origin --tags --force
+          ls /tmp/patch-*.patch \
+          >/dev/null \
+          2>&1 \
+          || {
+            echo "No new SVN revisions"
+            exit 0
+          }
+        
+          git remote add origin \
+          "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
+          git push origin trunk
