@@ -35,6 +35,8 @@ jobs:
           SVN_USERNAME: guest
           SVN_PASSWORD: guest
         run: |
+          git config --global --add safe.directory '*'
+
           echo "$SVN_PASSWORD" | \
           git svn clone \
             --trunk=trunk \
