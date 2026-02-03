@@ -39,7 +39,7 @@ jobs:
 
           echo "$SVN_PASSWORD" | \
           git svn clone \
-            --quiet
+            --quiet \
             --trunk=trunk \
             --branches=branches \
             --tags=tags \
